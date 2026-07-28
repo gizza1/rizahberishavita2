@@ -1,0 +1,134 @@
+{
+  "project": "Qumështorja VITA - Premium Dairy Landing Page",
+  "theme": "Light theme, minimalistic yet luxurious, Awwwards-level design",
+  "typography": {
+    "headings": {
+      "font": "Cabinet Grotesk",
+      "import_url": "https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,500,700,400,900&display=swap",
+      "classes": "font-['Cabinet_Grotesk',_sans-serif] tracking-tight",
+      "rules": "Never use Inter or standard sans for headings. Use fluid large scales (text-5xl to text-7xl for hero) and tighten letter spacing."
+    },
+    "body": {
+      "font": "Manrope",
+      "import_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap",
+      "classes": "font-['Manrope',_sans-serif]",
+      "rules": "Use for all paragraphs, labels, and small UI text. Maintain a high degree of legibility and clean geometric aesthetic."
+    }
+  },
+  "colors": {
+    "primary": "#007BFF",
+    "primary_light": "#E6F2FF",
+    "accent_green": "#10B981",
+    "accent_green_light": "#D1FAE5",
+    "background": "#FAFAFA",
+    "surface": "#FFFFFF",
+    "text_dark": "#0A1F44",
+    "text_muted": "#64748B",
+    "rules": "Anchor the design on white/off-white backgrounds to represent purity and milk. Use the signature VITA blue (#007BFF) for primary actions and accents. Introduce fresh green to signify farms and sustainability."
+  },
+  "visual_enhancers": {
+    "glassmorphism": {
+      "light": "backdrop-blur-xl bg-white/70 border border-white/40 shadow-[0_8px_32px_rgba(0,123,255,0.08)]",
+      "dark": "backdrop-blur-xl bg-black/60 border border-white/10"
+    },
+    "shadows": "Soft, diffuse colored shadows instead of harsh black drops. e.g. shadow-[0_20px_40px_-15px_rgba(0,123,255,0.15)]",
+    "gradients": "Subtle mesh gradients in backgrounds using light blue and green, animated softly."
+  },
+  "grids_and_layouts": {
+    "spacing": "Generous. Use p-12, p-16, py-24, py-32 for sections to let content breathe.",
+    "patterns": [
+      "Bento Grid for Quality and Sustainability sections",
+      "Split layouts with heavy asymmetry",
+      "Cinematic Full-screen Hero (100vh) with absolute positioned elements"
+    ]
+  },
+  "motion": {
+    "libraries": ["framer-motion", "lenis"],
+    "interactions": [
+      "Smooth scroll with Lenis (momentum scrolling)",
+      "Kinetic text reveal on hero load (masked line-by-line)",
+      "Hover zoom and 3D tilt effects on Product Cards",
+      "Parallax scrolling for background farm imagery",
+      "Cursor glow and mouse trail for premium feel",
+      "Magnetic buttons for primary CTAs",
+      "Animated counters in Quality section"
+    ],
+    "rules": "Motion must be purposeful, fluid, and premium. Avoid bouncy or frantic animations."
+  },
+  "3d_and_creative_libraries": {
+    "recommendations": "Use framer-motion for UI choreography. Consider 'react-fast-marquee' for a slow editorial marquee. Consider simple SVG masking for milk splash transitions."
+  },
+  "components_and_sections": [
+    {
+      "name": "Header / Navbar",
+      "specs": "Transparent initially, transitions to glassmorphism on scroll. Menu links: Home, Products, Recipes, About, Quality, Farmers, Sustainability, Contact. Include a 'data-testid' on links."
+    },
+    {
+      "name": "Hero Section",
+      "specs": "100vh. Background image with slow scale animation. Large headline 'Fresh Thinking. Fresh Dairy.' using text split reveal. Buttons: Explore Products (Primary, Magnetic) + Watch Story (Play icon, glassmorphic)."
+    },
+    {
+      "name": "Product Showcase",
+      "specs": "Horizontal animated slider using framer-motion. Tabs: Milk, Yogurt, Cooking Cream, Cheese, Butter. Cards feature hover zoom, subtle 3D tilt, and dynamic color backgrounds matching product type."
+    },
+    {
+      "name": "Farm-to-Table Journey",
+      "specs": "Vertical scroll-linked animation path (Cow -> Farm -> Collection -> Factory -> Supermarket). Use staggered reveals as the user scrolls down."
+    },
+    {
+      "name": "Quality & Impact",
+      "specs": "Bento split layout. Include animated counters: 20+ Years, 280+ Employees, Thousands of Farmers. Add certificates as badges."
+    },
+    {
+      "name": "Recipes",
+      "specs": "Grid layout with filter tabs. High-quality imagery, glassmorphic recipe cards."
+    },
+    {
+      "name": "Footer",
+      "specs": "Large, premium layout. Off-white or deep blue background. Newsletter signup, large typography."
+    }
+  ],
+  "image_urls": {
+    "hero_farm": {
+      "url": "https://images.unsplash.com/photo-1593023333594-487b2f7dd415",
+      "description": "Black and white cow on green grass field, used for Hero section parallax background"
+    },
+    "milk_pouring": {
+      "url": "https://images.unsplash.com/photo-1550583724-b2692b85b150",
+      "description": "Person pouring fresh milk, suitable for 'Farm to Table' or Quality section"
+    },
+    "milk_splash": {
+      "url": "https://images.pexels.com/photos/7452482/pexels-photo-7452482.jpeg",
+      "description": "Dynamic milk splash on dark background, used for high-contrast dramatic transitions or product highlights"
+    },
+    "product_bottles": {
+      "url": "https://images.unsplash.com/photo-1639151082235-406d8eb262b9",
+      "description": "Bottles of milk for product gallery placeholders"
+    },
+    "sunset_farm": {
+      "url": "https://images.unsplash.com/photo-1619178638002-f0ef92112f33",
+      "description": "Sunset at farm, used for Sustainability or About Us sections"
+    }
+  },
+  "accessibility_and_testing": {
+    "rules": "Ensure all text has sufficient contrast, especially text over images. Use text shadows if necessary. Add data-testid to ALL interactive elements (buttons, nav links, form inputs)."
+  },
+  "instructions_to_main_agent": [
+    "Implement pure HTML/Tailwind for the marketing layouts instead of rigid Shadcn structural components.",
+    "Ensure 'Cabinet Grotesk' is used exclusively for Headings and 'Manrope' for body.",
+    "Do not use generic Inter font. Do not use flat blue without depth. Everything must feel premium.",
+    "Add 'data-testid' to every interactive element for automated testing.",
+    "Ensure the application container is NOT center-aligned globally.",
+    "Use pure CSS or framer-motion for the milk splash and hover transitions.",
+    "Load fonts from Google Fonts and Fontshare in index.html or index.css."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not converge toward generic AI slop.",
+    "Create depth through layered design elements and z-index hierarchy.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur).",
+    "Never apply universal transitions (transition: all). Target specific properties.",
+    "Do not use AI assistant emoji characters.",
+    "Include hover states, active states, and focus states for all interactive elements."
+  ]
+}
