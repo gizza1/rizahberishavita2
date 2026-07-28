@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { PRODUCTS, FEATURED_IDS, CATEGORY_THEME } from "../../data/products";
 import { MagneticButton } from "./MagneticButton";
 import { Eyebrow } from "./Reveal";
@@ -8,7 +9,8 @@ import { ProductModal } from "./ProductModal";
 
 const items = FEATURED_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean);
 
-export const FeaturedSlider = ({ scrollTo }) => {
+export const FeaturedSlider = () => {
+  const navigate = useNavigate();
   const [i, setI] = useState(0);
   const [dir, setDir] = useState(1);
   const [selected, setSelected] = useState(null);
@@ -84,7 +86,7 @@ export const FeaturedSlider = ({ scrollTo }) => {
                   >
                     View Details
                   </MagneticButton>
-                  <MagneticButton variant="glass" data-testid="featured-find-stores" onClick={() => scrollTo("#contact")}>
+                  <MagneticButton variant="glass" data-testid="featured-find-stores" onClick={() => navigate("/contact")}>
                     Find in Stores
                   </MagneticButton>
                 </div>

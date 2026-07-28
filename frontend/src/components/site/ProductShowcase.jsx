@@ -61,12 +61,14 @@ const ProductCard = ({ product, onOpen, index }) => {
           style={{ background: `radial-gradient(circle at 50% 55%, ${theme.tint}, #ffffff 78%)` }}
         >
           <span className="absolute bottom-4 left-1/2 h-4 w-28 -translate-x-1/2 rounded-full bg-black/10 blur-md transition-all duration-300 group-hover:w-24 group-hover:opacity-70" />
-          <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            className="relative z-[1] h-44 w-auto object-contain drop-shadow-xl transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-110"
-          />
+          <div className="anim-bottle relative z-[1]" style={{ animationDelay: `${(index % 5) * 0.4}s` }}>
+            <img
+              src={product.image}
+              alt={product.name}
+              loading="lazy"
+              className="h-44 w-auto object-contain drop-shadow-xl transition-transform duration-500 ease-out group-hover:scale-110"
+            />
+          </div>
         </div>
 
         <p className="text-[11px] font-semibold uppercase tracking-wider text-vita-blue">
@@ -118,7 +120,7 @@ export const ProductShowcase = () => {
             Discover our <span className="text-gradient">delicious</span> range.
           </h2>
           <p className="mt-4 text-vita-muted">
-            Real VITA products — milk, yogurt, cheese, butter, cream and drinks. Tap any pack to explore it.
+            Real VITA products — fresh milk, yogurt, cream and drinks, straight from Kosovo. Tap any pack to explore it.
           </p>
         </div>
 

@@ -1,13 +1,10 @@
-// Real VITA products (sourced from qumeshtorjavita.com) + premium VITA-style renders
-// Local /products/*.webp = real VITA product photography.
-const CDN = "https://static.prod-images.emergentagent.com/jobs/477369cf-c888-4d03-abfd-f2e46607acd2/images";
+// Real VITA products only — sourced from qumeshtorjavita.com.
+// All images are the real product photography stored locally in /products/*.webp
 
 export const CATEGORIES = [
   { id: "all", label: "All Products" },
   { id: "milk", label: "Milk" },
   { id: "yogurt", label: "Yogurt" },
-  { id: "cheese", label: "Cheese" },
-  { id: "butter", label: "Butter" },
   { id: "cream", label: "Cream" },
   { id: "drinks", label: "Drinks" },
 ];
@@ -16,8 +13,6 @@ export const CATEGORIES = [
 export const CATEGORY_THEME = {
   milk: { tint: "#E6F2FF", glow: "0, 123, 255", accent: "#007BFF" },
   yogurt: { tint: "#FDE7F1", glow: "236, 72, 153", accent: "#EC4899" },
-  cheese: { tint: "#FEF3C7", glow: "234, 179, 8", accent: "#EAB308" },
-  butter: { tint: "#FEF9E7", glow: "245, 200, 66", accent: "#F5C842" },
   cream: { tint: "#F1FBF6", glow: "16, 185, 129", accent: "#10B981" },
   drinks: { tint: "#E0F7FA", glow: "6, 182, 212", accent: "#06B6D4" },
 };
@@ -33,41 +28,11 @@ export const PRODUCTS = [
     badge: "Bestseller",
     short: "Full-fat fresh milk, silky and naturally rich.",
     description:
-      "Our signature fresh whole milk with 3.2% fat. Gently pasteurised to lock in the pure, creamy taste of the Kosovo highlands — perfect for the whole family, morning to night.",
+      "Our signature fresh whole milk with 3.2% fat. Gently processed to lock in the pure, creamy taste of the Kosovo highlands — perfect for the whole family, morning to night.",
     ingredients: ["Fresh cow's milk", "Vitamin D", "Vitamin B12"],
     nutrition: { Energy: "64 kcal", Fat: "3.2 g", Protein: "3.3 g", Carbs: "4.8 g", Calcium: "120 mg" },
-    sizes: ["500 ml", "1 L"],
-    storage: "Keep refrigerated at 2–6°C. Consume within 3 days of opening.",
-  },
-  {
-    id: "choc-milk",
-    name: "Vita Chocolate Milk",
-    category: "milk",
-    tags: ["kids", "popular"],
-    image: `${CDN}/9124c99f8ef08ab3ab91d7c3cf6ea85b2b96251034fce57cfb3eef7868d43aca.jpeg`,
-    badge: "Kids Favourite",
-    short: "Velvety cocoa milk kids adore.",
-    description:
-      "Real cocoa blended with fresh VITA milk for a smooth chocolate treat with less sugar and all the calcium growing kids need.",
-    ingredients: ["Fresh milk", "Cocoa", "Cane sugar", "Vitamin D"],
-    nutrition: { Energy: "82 kcal", Fat: "3.0 g", Protein: "3.4 g", Carbs: "10.5 g", Calcium: "125 mg" },
-    sizes: ["250 ml", "500 ml"],
-    storage: "Keep refrigerated at 2–6°C.",
-  },
-  {
-    id: "protein-milk",
-    name: "Vita Protein Milk",
-    category: "milk",
-    tags: ["protein", "healthy", "featured"],
-    image: `${CDN}/de438773c06ea02619ab3196ebfe931b4f2c9da1ed0a5104087452ee99484df4.jpeg`,
-    badge: "+20g Protein",
-    short: "High-protein milk for active lives.",
-    description:
-      "Filtered fresh milk delivering 20g of natural protein per bottle with zero added sugar — built for recovery, focus and everyday strength.",
-    ingredients: ["Filtered milk", "Milk protein concentrate", "Vitamin B12"],
-    nutrition: { Energy: "58 kcal", Fat: "1.5 g", Protein: "6.5 g", Carbs: "3.2 g", Calcium: "150 mg" },
-    sizes: ["330 ml", "500 ml"],
-    storage: "Keep refrigerated at 2–6°C.",
+    sizes: ["1 L"],
+    storage: "Store cool & dry. Refrigerate after opening and consume within 3 days.",
   },
   {
     id: "jogurt-15",
@@ -82,7 +47,7 @@ export const PRODUCTS = [
       "Silky low-fat yogurt cultured slowly for a clean, refreshing tang. A daily source of live cultures and calcium for a happy gut.",
     ingredients: ["Fresh milk", "Live yogurt cultures"],
     nutrition: { Energy: "50 kcal", Fat: "1.5 g", Protein: "3.5 g", Carbs: "5.0 g", Calcium: "130 mg" },
-    sizes: ["180 g", "1 L"],
+    sizes: ["1 L"],
     storage: "Keep refrigerated at 2–6°C.",
   },
   {
@@ -98,37 +63,7 @@ export const PRODUCTS = [
       "The full-bodied yogurt our founders started with — thick, creamy and honest. Wonderful on its own or as the base of every recipe.",
     ingredients: ["Fresh milk", "Live yogurt cultures"],
     nutrition: { Energy: "63 kcal", Fat: "3.2 g", Protein: "3.4 g", Carbs: "4.7 g", Calcium: "125 mg" },
-    sizes: ["180 g", "500 g", "1 L"],
-    storage: "Keep refrigerated at 2–6°C.",
-  },
-  {
-    id: "greek-yogurt",
-    name: "Vita Greek Yogurt",
-    category: "yogurt",
-    tags: ["protein", "healthy", "featured"],
-    image: `${CDN}/41976bcc3c557ad8654d60ecf9070de4f30e0add7db0fd71a6629b19f9e5006f.jpeg`,
-    badge: "High Protein",
-    short: "Thick, strained Greek-style yogurt.",
-    description:
-      "Triple-strained for an indulgently thick texture and double the protein. Naturally low in sugar, endlessly versatile.",
-    ingredients: ["Fresh milk", "Live cultures", "Milk protein"],
-    nutrition: { Energy: "97 kcal", Fat: "5.0 g", Protein: "9.0 g", Carbs: "3.6 g", Calcium: "110 mg" },
-    sizes: ["150 g", "500 g"],
-    storage: "Keep refrigerated at 2–6°C.",
-  },
-  {
-    id: "fruit-yogurt",
-    name: "Vita Fruit Yogurt",
-    category: "yogurt",
-    tags: ["kids", "popular"],
-    image: `${CDN}/8329e6e99564a4c08d5b1575a876666ef8149d76c5c93f6649d20d4ca5759c21.jpeg`,
-    badge: "Real Fruit",
-    short: "Creamy yogurt with real fruit pieces.",
-    description:
-      "Smooth yogurt swirled with sun-ripened fruit. A wholesome snack packed with flavour and nothing artificial.",
-    ingredients: ["Fresh milk", "Live cultures", "Strawberry", "Fruit sugar"],
-    nutrition: { Energy: "88 kcal", Fat: "2.8 g", Protein: "3.2 g", Carbs: "12.0 g", Calcium: "115 mg" },
-    sizes: ["125 g", "150 g"],
+    sizes: ["1 L"],
     storage: "Keep refrigerated at 2–6°C.",
   },
   {
@@ -139,9 +74,9 @@ export const PRODUCTS = [
     image: "/products/kos_400.webp",
     real: true,
     badge: "Traditional",
-    short: "Traditional sour cream 'kos', 400g.",
+    short: "Traditional soured milk 'kos', 400g.",
     description:
-      "Our beloved traditional soured cream — dense, tangy and versatile. A staple of Balkan kitchens for generations.",
+      "Our beloved traditional soured milk — dense, tangy and versatile. A staple of Balkan kitchens for generations.",
     ingredients: ["Fresh milk", "Live cultures"],
     nutrition: { Energy: "116 kcal", Fat: "3.2 g", Protein: "3.0 g", Carbs: "4.5 g", Calcium: "120 mg" },
     sizes: ["400 g"],
@@ -160,7 +95,7 @@ export const PRODUCTS = [
       "A heat-stable cooking cream engineered for silky sauces, soups and risottos. Whisk it in confidently — it holds beautifully.",
     ingredients: ["Cream", "Milk", "Stabiliser"],
     nutrition: { Energy: "195 kcal", Fat: "20 g", Protein: "2.5 g", Carbs: "3.5 g", Calcium: "80 mg" },
-    sizes: ["0.5 L", "1 L"],
+    sizes: ["1 L"],
     storage: "Store cool & dry. Refrigerate after opening.",
   },
   {
@@ -181,7 +116,7 @@ export const PRODUCTS = [
   },
   {
     id: "whipping-cream",
-    name: "Vita Whipping Cream",
+    name: "Vita Whipping Cream 1L",
     category: "cream",
     tags: ["family", "featured"],
     image: "/products/whipping_cream.webp",
@@ -196,81 +131,6 @@ export const PRODUCTS = [
     storage: "Store cool & dry. Refrigerate after opening.",
   },
   {
-    id: "white-cheese",
-    name: "Vita White Cheese",
-    category: "cheese",
-    tags: ["family", "featured", "popular"],
-    image: `${CDN}/de6f10148c99e3bcd8a59a2c0faba112a523bd6f0af006fc8b13dfa71d1ce864.jpeg`,
-    badge: "Feta Style",
-    short: "Crumbly white brine cheese.",
-    description:
-      "Matured in brine for a bright, salty bite and creamy crumble. The heart of every fresh salad and burek.",
-    ingredients: ["Milk", "Salt", "Rennet", "Cultures"],
-    nutrition: { Energy: "264 kcal", Fat: "21 g", Protein: "14 g", Carbs: "1.5 g", Calcium: "360 mg" },
-    sizes: ["250 g", "500 g"],
-    storage: "Keep refrigerated at 2–6°C, submerged in brine.",
-  },
-  {
-    id: "yellow-cheese",
-    name: "Vita Yellow Cheese",
-    category: "cheese",
-    tags: ["family", "featured"],
-    image: `${CDN}/c2d6154022c98c121b5fbc964bb01e02238b4d35a8ea04d16c319f42c7318be9.jpeg`,
-    badge: "Aged",
-    short: "Semi-hard, mellow and melty.",
-    description:
-      "A smooth, gently aged yellow cheese that slices and melts like a dream — made for sandwiches, boards and bakes.",
-    ingredients: ["Milk", "Salt", "Rennet", "Cultures"],
-    nutrition: { Energy: "356 kcal", Fat: "27 g", Protein: "25 g", Carbs: "0.5 g", Calcium: "720 mg" },
-    sizes: ["200 g", "400 g"],
-    storage: "Keep refrigerated at 2–6°C.",
-  },
-  {
-    id: "mozzarella",
-    name: "Vita Mozzarella",
-    category: "cheese",
-    tags: ["family", "popular"],
-    image: `${CDN}/dbf480db5bc69f91e7491e251da6f30209dbf430431c1bcebadd9e2f64d0ff20.jpeg`,
-    badge: "Fresh",
-    short: "Soft fresh mozzarella pearls.",
-    description:
-      "Delicately milky mozzarella made fresh daily. Tear it over pizza, caprese or straight from the tub.",
-    ingredients: ["Milk", "Salt", "Rennet", "Citric acid"],
-    nutrition: { Energy: "240 kcal", Fat: "18 g", Protein: "18 g", Carbs: "1.0 g", Calcium: "500 mg" },
-    sizes: ["125 g", "250 g"],
-    storage: "Keep refrigerated at 2–6°C, in water.",
-  },
-  {
-    id: "butter",
-    name: "Vita Butter",
-    category: "butter",
-    tags: ["family", "featured"],
-    image: `${CDN}/18908a22767325149e78c22aaf912bffc4a76c04f98b475f1175f56881e13345.jpeg`,
-    badge: "Churned Daily",
-    short: "Sweet-cream churned butter.",
-    description:
-      "Slow-churned from fresh cream for a rich golden colour and a clean, buttery finish that lifts everything it touches.",
-    ingredients: ["Cream", "Salt"],
-    nutrition: { Energy: "744 kcal", Fat: "82 g", Protein: "0.7 g", Carbs: "0.6 g", Calcium: "24 mg" },
-    sizes: ["100 g", "250 g"],
-    storage: "Keep refrigerated at 2–6°C.",
-  },
-  {
-    id: "kefir",
-    name: "Vita Kefir",
-    category: "drinks",
-    tags: ["healthy", "protein", "featured"],
-    image: `${CDN}/31b4b9ce3a94bef3cfd5f28dd1d2333f5b11ad4a6ff1c7a6b55452742a345a7a.jpeg`,
-    badge: "Probiotic",
-    short: "Cultured probiotic drink.",
-    description:
-      "A lightly effervescent fermented milk drink teeming with billions of live cultures — a daily boost for your gut and immunity.",
-    ingredients: ["Fresh milk", "Kefir cultures"],
-    nutrition: { Energy: "55 kcal", Fat: "1.5 g", Protein: "3.3 g", Carbs: "4.0 g", Calcium: "120 mg" },
-    sizes: ["330 ml", "1 L"],
-    storage: "Keep refrigerated at 2–6°C.",
-  },
-  {
     id: "ayran",
     name: "Vita Ayran 1.2%",
     category: "drinks",
@@ -283,7 +143,7 @@ export const PRODUCTS = [
       "The perfect thirst-quencher — cool, lightly salted whisked yogurt that pairs with every meal under the summer sun.",
     ingredients: ["Yogurt", "Water", "Salt"],
     nutrition: { Energy: "38 kcal", Fat: "1.2 g", Protein: "2.6 g", Carbs: "3.8 g", Calcium: "95 mg" },
-    sizes: ["250 ml", "1 L"],
+    sizes: ["1 L"],
     storage: "Keep refrigerated at 2–6°C.",
   },
 ];
@@ -293,10 +153,8 @@ export const FILTERS = [
   { id: "all", label: "All" },
   { id: "featured", label: "Featured" },
   { id: "popular", label: "Most Popular" },
-  { id: "protein", label: "Protein" },
   { id: "family", label: "Family" },
-  { id: "kids", label: "Kids" },
   { id: "healthy", label: "Healthy" },
 ];
 
-export const FEATURED_IDS = ["milk-32", "greek-yogurt", "yellow-cheese", "butter", "protein-milk", "kefir"];
+export const FEATURED_IDS = ["milk-32", "jogurt-15", "cooking-cream-1l", "kos-400", "whipping-cream", "ayran"];

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Play, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { MagneticButton } from "./MagneticButton";
 import { IMAGES } from "../../data/content";
 
@@ -20,7 +21,8 @@ const LineReveal = ({ text, delay }) => (
   </span>
 );
 
-export const Hero = ({ scrollTo }) => {
+export const Hero = () => {
+  const navigate = useNavigate();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
@@ -83,7 +85,7 @@ export const Hero = ({ scrollTo }) => {
               transition={{ delay: 0.9, duration: 0.8 }}
               className="mt-7 max-w-md text-lg font-light text-vita-ink/70"
             >
-              From our farms to your family. Honestly fresh milk, yogurt &amp; cheese,
+              From our farms to your family. Honestly fresh milk, yogurt &amp; cream,
               crafted in Kosovo since 2003.
             </motion.p>
 
@@ -93,10 +95,10 @@ export const Hero = ({ scrollTo }) => {
               transition={{ delay: 1.05, duration: 0.8 }}
               className="mt-9 flex flex-wrap items-center gap-4"
             >
-              <MagneticButton data-testid="hero-explore" onClick={() => scrollTo("#products")}>
+              <MagneticButton data-testid="hero-explore" onClick={() => navigate("/products")}>
                 Explore Products
               </MagneticButton>
-              <MagneticButton variant="glass" data-testid="hero-watch" onClick={() => scrollTo("#about")}>
+              <MagneticButton variant="glass" data-testid="hero-watch" onClick={() => navigate("/about")}>
                 <Play size={16} className="fill-vita-blue text-vita-blue" /> Watch Story
               </MagneticButton>
             </motion.div>
@@ -127,7 +129,7 @@ export const Hero = ({ scrollTo }) => {
 
       {/* scroll indicator */}
       <motion.button
-        onClick={() => scrollTo("#products")}
+        onClick={() => navigate("/products")}
         style={{ opacity: fade }}
         data-testid="hero-scroll-indicator"
         className="absolute bottom-24 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-vita-ink/60"

@@ -200,6 +200,26 @@ h1, h2, h3, h4, h5, .font-display {
 }
 .float-slow { animation: gentleFloat 6s ease-in-out infinite; }
 
+/* product bottle continuous float + subtle rotate */
+@keyframes bottleFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+.anim-bottle { animation: bottleFloat 5.5s ease-in-out infinite; will-change: transform; }
+
+/* slow continuous 3D spin for modal/featured hero product */
+@keyframes bottleSpin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+.anim-spin-y { animation: bottleSpin 14s linear infinite; transform-style: preserve-3d; }
+
+/* page transition helper */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes spinSlow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

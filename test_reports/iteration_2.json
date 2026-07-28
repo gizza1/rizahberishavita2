@@ -1,0 +1,39 @@
+{
+  "summary": "Iteration 2 full regression of the VITA multi-page refactor. Backend: 14/14 pytest tests pass (health, POST/GET /api/contact validation, POST/GET /api/newsletter incl. 409 duplicate). Frontend (Playwright, desktop 1920x1080 + mobile 390x844): all 8 navbar routes navigate correctly with URL change and page transition; nav-cta -> /products, nav-logo -> /; direct URL load of every route returns 200 with the correct page heading and zero page errors; unknown route falls back to Home. Hero buttons (hero-explore -> /products, hero-watch -> /about, hero-scroll-indicator -> /products) all pass. Products catalog shows exactly the 8 real VITA products, no cheese/butter/chocolate/protein/greek/kefir items; category tabs are only all/milk/yogurt/cream/drinks (cat-tab-cheese/butter absent); cream tab = 4 items; filter chips toggle on/off correctly (healthy -> 1, toggle off -> 8); live search works ('ayran' -> 1). 8 .anim-bottle elements present and card hover produces a 3D matrix3d tilt. ProductModal renders via portal into BODY at z-index 2000 vs navbar 900 (above navbar), close works with a normal click, related products swap content (Vita Kos -> Vita Cooking Cream 1L). Featured slider next/prev/dots work, View Details opens modal, featured-find-stores -> /contact. Contact form POSTs successfully (success toast), gallery lightbox opens/closes with normal clicks, newsletter subscribe succeeds then returns 'You're already subscribed.' on repeat, footer links navigate correctly, scroll-top appears after scrolling past ~700px and returns to top. Mobile drawer navigation works and highlights the active route. No console/page errors anywhere (only an expected 409 network log for the duplicate newsletter test).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "ProductModal - Related products row",
+        "issues": [
+          "The 3 related-product buttons use `flex-1` without `min-w-0`, so the `truncate` on the name never applies and the third card overflows/clips past the modal's right edge (e.g. 'Vita Whipping Crea...' cut off when opening Vita Kos 3.2%). Fix: add `min-w-0` to the related button className in /app/frontend/src/components/site/ProductModal.jsx (line ~140)."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Optional polish: add `min-w-0` to the related-product buttons in ProductModal.jsx so the third thumbnail no longer overflows the modal."
+  ],
+  "critical_code_review_comments": [
+    "Layout.jsx resets scroll on route change with window.scrollTo(0,0), which bypasses the Lenis instance; Lenis' internal scroll value can briefly disagree with window.scrollY (observed: after a wheel of 3000px on a fresh load, scrollY was only 465 and scroll-top stayed hidden). Consider calling lenis.scrollTo(0, { immediate: true }) via a shared ref instead.",
+    "Catch-all route `path=\"*\"` renders Home with a 200 for unknown URLs; consider a real 404 page for clarity/SEO.",
+    "No functional/regression issues found in the routing refactor or the real-products-only catalog."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Created throwaway contact submission (TEST QA User) and two newsletter subscribers (news<ts>@test.com, qa<ts>@test.com) in MongoDB via the public endpoints; harmless marketing data, not cleaned up as there is no DELETE endpoint.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "None required - public site, no auth (per /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Backend suite lives at /app/backend/tests/backend_test.py (14 tests, all green). Playwright notes: the intro loader (site-loader) needs ~3s plus a mouse move before interacting; the ProductModal/gallery lightbox are React portals on document.body so a modal left open will intercept clicks on scroll-top; modal titles are h2 only in some places - prefer data-testid; page.mouse.wheel scrolls are damped by Lenis so scroll >2 wheels (or wait longer) before asserting scroll-top visibility. All routing, catalog, modal, slider, contact, newsletter and mobile-nav flows verified in this iteration.",
+  "rca_of_the_issue": "Two initial test failures were test-side, not product defects: (1) `[data-testid=product-modal] h2` timed out because the modal heading level differs - re-run with a stable locator passed; (2) scroll-top appeared missing on a fresh /quality load because Lenis damping left scrollY at 465 (< the 700px threshold) - after a real client-side navigation and a larger scroll the button appeared and returned the page to top."
+}

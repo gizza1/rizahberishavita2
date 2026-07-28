@@ -1,17 +1,25 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, Instagram, Facebook, Youtube, Loader2 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const COLS = [
-  { title: "Products", links: ["Milk", "Yogurt", "Cheese", "Butter", "Cream", "Drinks"] },
+  { title: "Products", links: ["Milk", "Yogurt", "Cream", "Drinks"] },
   { title: "Company", links: ["About", "Quality", "Farmers", "Sustainability"] },
   { title: "Discover", links: ["Recipes", "Gallery", "Contact"] },
 ];
 
-export const Footer = ({ scrollTo }) => {
+const ROUTE_FOR = {
+  Milk: "/products", Yogurt: "/products", Cream: "/products", Drinks: "/products",
+  About: "/about", Quality: "/quality", Farmers: "/farmers", Sustainability: "/sustainability",
+  Recipes: "/recipes", Gallery: "/contact", Contact: "/contact",
+};
+
+export const Footer = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +39,7 @@ export const Footer = ({ scrollTo }) => {
     }
   };
 
-  const idFor = (l) => "#" + (["Milk","Yogurt","Cheese","Butter","Cream","Drinks"].includes(l) ? "products" : l.toLowerCase());
+  const idFor = (l) => ROUTE_FOR[l] || "/";
 
   return (
     <footer className="relative overflow-hidden bg-vita-ink text-white">
@@ -97,7 +105,7 @@ export const Footer = ({ scrollTo }) => {
                   <li key={l}>
                     <a
                       href={idFor(l)}
-                      onClick={(e) => { e.preventDefault(); scrollTo(idFor(l)); }}
+                      onClick={(e) => { e.preventDefault(); navigate(idFor(l)); window.scrollTo(0, 0); }}
                       data-testid={`footer-link-${l.toLowerCase()}`}
                       className="group inline-flex items-center gap-1 text-sm text-white/70 transition-colors duration-300 hover:text-white"
                     >
