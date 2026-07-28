@@ -76,7 +76,7 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-vita-bg">
-      <Toaster position="top-center" richColors />
+      <Toaster position="bottom-right" richColors />
       <Cursor />
 
       {loading && <Loader closing={closing} />}

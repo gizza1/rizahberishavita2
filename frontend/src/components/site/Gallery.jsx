@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { GALLERY } from "../../data/content";
@@ -40,32 +41,35 @@ export const Gallery = () => {
         ))}
       </div>
 
-      <AnimatePresence>
-        {lightbox && (
-          <motion.div
-            className="fixed inset-0 z-[1000] flex items-center justify-center p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setLightbox(null)}
-            data-testid="gallery-lightbox"
-          >
-            <div className="absolute inset-0 bg-vita-ink/80 backdrop-blur-md" />
-            <button className="absolute right-6 top-6 z-10 flex h-12 w-12 items-center justify-center rounded-full glass text-white" data-testid="lightbox-close">
-              <X size={22} />
-            </button>
-            <motion.img
-              src={lightbox}
-              alt=""
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-[5] max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {createPortal(
+        <AnimatePresence>
+          {lightbox && (
+            <motion.div
+              className="fixed inset-0 z-[2000] flex items-center justify-center p-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setLightbox(null)}
+              data-testid="gallery-lightbox"
+            >
+              <div className="absolute inset-0 bg-vita-ink/80 backdrop-blur-md" />
+              <button className="absolute right-6 top-6 z-10 flex h-12 w-12 items-center justify-center rounded-full glass text-white" data-testid="lightbox-close">
+                <X size={22} />
+              </button>
+              <motion.img
+                src={lightbox}
+                alt=""
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="relative z-[5] max-h-[85vh] max-w-[90vw] rounded-2xl object-contain shadow-2xl"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 };

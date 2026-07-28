@@ -24,9 +24,9 @@ export const FeaturedSlider = ({ scrollTo }) => {
     const t = setInterval(() => {
       setDir(1);
       setI((v) => (v + 1) % items.length);
-    }, 4200);
+    }, 5000);
     return () => clearInterval(t);
-  }, []);
+  }, [i]);
 
   return (
     <section

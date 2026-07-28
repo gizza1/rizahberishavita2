@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, Package, Snowflake, Leaf } from "lucide-react";
 import { CATEGORY_THEME, PRODUCTS } from "../../data/products";
@@ -9,11 +10,11 @@ export const ProductModal = ({ product, onClose, onSelect }) => {
     ? PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
     : [];
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {product && (
         <motion.div
-          className="fixed inset-0 z-[1000] flex items-end justify-center p-0 sm:items-center sm:p-6"
+          className="fixed inset-0 z-[2000] flex items-end justify-center p-0 sm:items-center sm:p-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -156,6 +157,7 @@ export const ProductModal = ({ product, onClose, onSelect }) => {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

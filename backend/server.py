@@ -32,10 +32,10 @@ def now_iso():
 
 # ---------- Models ----------
 class ContactCreate(BaseModel):
-    name: str
+    name: str = Field(min_length=1)
     email: EmailStr
     subject: Optional[str] = ""
-    message: str
+    message: str = Field(min_length=1)
 
 
 class Contact(BaseModel):
@@ -79,10 +79,11 @@ async def list_contacts():
 
 @api_router.post("/newsletter", response_model=Newsletter)
 async def subscribe_newsletter(payload: NewsletterCreate):
-    existing = await db.newsletter.find_one({"email": payload.email})
+    email = payload.email.strip().lower()
+    existing = await db.newsletter.find_one({"email": email})
     if existing:
         raise HTTPException(status_code=409, detail="Ky email është abonuar tashmë.")
-    doc = Newsletter(email=payload.email).model_dump()
+    doc = Newsletter(email=email).model_dump()
     await db.newsletter.insert_one(doc)
     return doc
 
@@ -105,6 +106,11 @@ app.add_middleware(
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+
+@app.on_event("startup")
+async def create_indexes():
+    await db.newsletter.create_index("email", unique=True)
 
 
 @app.on_event("shutdown")

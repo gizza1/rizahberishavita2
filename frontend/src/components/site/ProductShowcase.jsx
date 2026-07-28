@@ -95,13 +95,16 @@ export const ProductShowcase = () => {
   const [selected, setSelected] = useState(null);
 
   const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
     return PRODUCTS.filter((p) => {
       const byCat = cat === "all" || p.category === cat;
       const byFilter = filter === "all" || p.tags.includes(filter);
       const byQuery =
-        !query ||
-        p.name.toLowerCase().includes(query.toLowerCase()) ||
-        p.short.toLowerCase().includes(query.toLowerCase());
+        !q ||
+        p.name.toLowerCase().includes(q) ||
+        p.short.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.tags.some((t) => t.toLowerCase().includes(q));
       return byCat && byFilter && byQuery;
     });
   }, [cat, filter, query]);
@@ -163,7 +166,7 @@ export const ProductShowcase = () => {
         {FILTERS.map((f) => (
           <button
             key={f.id}
-            onClick={() => setFilter(f.id)}
+            onClick={() => setFilter((cur) => (cur === f.id ? "all" : f.id))}
             data-testid={`filter-${f.id}`}
             className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors duration-300 ${
               filter === f.id
