@@ -1,0 +1,41 @@
+{
+  "summary": "Full backend + frontend E2E test of the Qumështorja VITA landing page. Backend: created pytest suite (14 tests) covering /api/ health, POST/GET /api/contact (persistence + 422 validation matrix) and POST/GET /api/newsletter (duplicate 409, invalid email) — 13 passed, 1 skipped (documents non-normalized email). Frontend: verified loader dismissal, navbar + all 7 nav anchors, glass-on-scroll, 17-product catalog with 6 category tabs, 7 filter chips, live search + no-products state, product modal (nutrition/ingredients/sizes/storage/related swap), featured slider (next/prev/dots/auto-rotate/view-details/find-stores), quality counters (20+/280+/3,000+/6), 5 recipe tabs, 4 timeline entries, testimonial auto-carousel, gallery lightbox, scroll-to-top, mobile menu + mobile modal, contact form -> POST /api/contact 200 + success toast + form reset, newsletter -> 200 then 409 'already subscribed' toast. Both submissions verified persisted via GET APIs. 40/40 images loaded, zero console/page errors, no HTTP >= 400, no mobile horizontal overflow.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/newsletter", "issue": "Email is not normalized/lowercased before the duplicate lookup, so 'a@b.com' and 'A@B.com' both subscribe (two rows for one address). No unique index on newsletter.email either, so concurrent posts can also duplicate."},
+      {"endpoint": "POST /api/contact", "issue": "No min_length on name/message — an empty-string name and message are accepted (200) at API level; only the UI guards this."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Gallery lightbox / App.js layout", "issue": "CRITICAL: the lightbox close button is unclickable — Playwright normal click times out with 'navbar intercepts pointer events', and elementFromPoint over the close button returns data-testid=navbar. Root cause: <main className=\"relative z-10\"> in App.js creates a stacking context, so overlays inside it (gallery lightbox z-[1000], product modal z-[1000]) cannot rise above the fixed navbar (z-[950] progress bar / z-[900] navbar) which sit outside main. Lightbox can only be closed by clicking the backdrop.", "selector": "[data-testid=\"lightbox-close\"]", "priority": "HIGH"},
+      {"component": "ProductModal / Navbar", "issue": "Same stacking-context defect makes the navbar (and scroll-to-top button) paint on top of the open product modal on both desktop and mobile — visible in screenshots. The modal close button happens to sit below the navbar strip so it still works, but the overlay looks broken.", "selector": "[data-testid=\"product-modal\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Global toasts", "issues": ["Sonner toasts render top-center on top of the navbar and hide the 'Recipes/About/Quality' links while visible; move to top-right/bottom-right or offset below the navbar."]},
+      {"screen": "Products catalog", "issues": ["Live search matches only name + short text, so searching 'milk' returns 3 of the 6 milk-ish SKUs and misses 'Vita Qumësht 3.2%' / 'Vita Kos'; include category and tags (and Albanian synonyms) in the match.", "Filter chips are not toggleable — clicking an already-active chip keeps it active; the user must click the 'All' chip to clear."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Fix overlay stacking: remove z-10 from <main> in App.js or render ProductModal/Gallery lightbox into a React portal at document.body with z-index above the navbar (or hide/lower the navbar while an overlay is open). This currently blocks closing the gallery lightbox via its X button.",
+    "Reposition/offset sonner toasts so they don't cover the navbar links.",
+    "Normalize newsletter emails to lowercase and add a unique index on newsletter.email.",
+    "Broaden product search to include category/tags so 'milk' also matches 'Vita Qumësht'."
+  ],
+  "critical_code_review_comments": [
+    "App.js: `<main className=\"relative z-10\">` traps every child overlay in a z-index:10 stacking context — this is the single root cause of the navbar painting over modals/lightbox.",
+    "FeaturedSlider.jsx: the 4.2s autoplay interval never pauses on user interaction (prev/next/dot click), so a slide can flip out from under the user mid-read; reset the timer inside go().",
+    "server.py: POST /api/contact returns the mutated insert dict; safe today only because response_model=Contact strips the injected _id. Prefer inserting a copy to avoid future leakage.",
+    "Contact.jsx/Footer.jsx duplicate the axios+toast submit pattern; consider a shared hook. Inputs also lack `required`/aria-invalid — validation is toast-only."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py", "/app/test_reports/iteration_1.json"],
+  "success_rate": {"backend": "100%", "frontend": "95%"},
+  "seed_data_creation": "Transient test records only: contact 'TEST_UI Tester' (test_qa_ui_1785269616@example.com) and newsletter test_qa_nlui_1785269616@example.com created via the UI and left in place as proof of persistence; all pytest-created TEST_/test_qa_ records are auto-cleaned by the suite's cleanup test.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend suite lives at /app/backend/tests/backend_test.py (run: pytest tests/backend_test.py, uses REACT_APP_BACKEND_URL from /app/frontend/.env). Playwright notes: the site-loader dismisses reliably after ~4s of wait; use page.evaluate scrollIntoView for navigation (Lenis). Featured slider autoplays every 4.2s so never compare slide text across >1.5s waits — assert on the active dot's inline width (28px) instead. After the overlay z-index fix, re-verify [data-testid=lightbox-close] is clickable with a normal (non-forced) click.",
+  "rca_of_the_issue": "Gallery lightbox close button unclickable: App.js wraps all sections in `<main className=\"relative z-10\">`, which establishes a stacking context. The lightbox's z-[1000] is therefore resolved *within* main (effective z-index 10 at root level), while Navbar (z-[900]) and the scroll progress bar (z-[950]) are siblings of main at root level and paint above it. The close button is positioned at right-6/top-6, i.e. underneath the fixed navbar, so the navbar receives the pointer events. Repro: open the site, scroll to Gallery, click gallery-item-0, click lightbox-close -> click times out ('navbar intercepts pointer events'); document.elementFromPoint over the button returns the navbar. Mitigation: portal overlays to document.body or drop z-10 from <main>."
+}
