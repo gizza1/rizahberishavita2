@@ -13,7 +13,6 @@ import { Footer } from "./Footer";
 
 import Home from "../../pages/Home";
 import Products from "../../pages/Products";
-import RecipesPage from "../../pages/RecipesPage";
 import AboutPage from "../../pages/AboutPage";
 import QualityPage from "../../pages/QualityPage";
 import FarmersPage from "../../pages/FarmersPage";
@@ -40,7 +39,6 @@ const AnimatedRoutes = () => {
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/recipes" element={<RecipesPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/quality" element={<QualityPage />} />
           <Route path="/farmers" element={<FarmersPage />} />

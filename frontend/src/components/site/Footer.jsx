@@ -9,13 +9,13 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const COLS = [
   { title: "Products", links: ["Milk", "Yogurt", "Cream", "Drinks"] },
   { title: "Company", links: ["About", "Quality", "Farmers", "Sustainability"] },
-  { title: "Discover", links: ["Recipes", "Gallery", "Contact"] },
+  { title: "Discover", links: ["Gallery", "Contact"] },
 ];
 
 const ROUTE_FOR = {
   Milk: "/products", Yogurt: "/products", Cream: "/products", Drinks: "/products",
   About: "/about", Quality: "/quality", Farmers: "/farmers", Sustainability: "/sustainability",
-  Recipes: "/recipes", Gallery: "/contact", Contact: "/contact",
+  Gallery: "/contact", Contact: "/contact",
 };
 
 export const Footer = () => {

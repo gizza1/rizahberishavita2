@@ -7,7 +7,6 @@ import { MagneticButton } from "./MagneticButton";
 const LINKS = [
   { label: "Home", to: "/" },
   { label: "Products", to: "/products" },
-  { label: "Recipes", to: "/recipes" },
   { label: "About", to: "/about" },
   { label: "Quality", to: "/quality" },
   { label: "Farmers", to: "/farmers" },

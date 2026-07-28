@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Move3d } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PRODUCTS, FEATURED_IDS, CATEGORY_THEME } from "../../data/products";
 import { MagneticButton } from "./MagneticButton";
@@ -14,6 +14,9 @@ export const FeaturedSlider = () => {
   const [i, setI] = useState(0);
   const [dir, setDir] = useState(1);
   const [selected, setSelected] = useState(null);
+  const [rot, setRot] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const drag = useRef({ active: false, lastX: 0, lastY: 0, moved: false });
   const active = items[i];
   const theme = CATEGORY_THEME[active.category];
 
@@ -22,13 +25,43 @@ export const FeaturedSlider = () => {
     setI((next + items.length) % items.length);
   }, [i]);
 
+  // reset rotation when the featured product changes
   useEffect(() => {
+    setRot({ x: 0, y: 0 });
+  }, [i]);
+
+  // autoplay (paused while the user is rotating the product)
+  useEffect(() => {
+    if (dragging) return;
     const t = setInterval(() => {
       setDir(1);
       setI((v) => (v + 1) % items.length);
     }, 5000);
     return () => clearInterval(t);
-  }, [i]);
+  }, [i, dragging]);
+
+  const onPointerDown = (e) => {
+    drag.current = { active: true, lastX: e.clientX, lastY: e.clientY, moved: false };
+    setDragging(true);
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onPointerMove = (e) => {
+    if (!drag.current.active) return;
+    const dx = e.clientX - drag.current.lastX;
+    const dy = e.clientY - drag.current.lastY;
+    drag.current.lastX = e.clientX;
+    drag.current.lastY = e.clientY;
+    if (Math.abs(dx) + Math.abs(dy) > 2) drag.current.moved = true;
+    setRot((r) => ({
+      y: r.y + dx * 0.6,
+      x: Math.max(-24, Math.min(24, r.x - dy * 0.4)),
+    }));
+  };
+  const onPointerUp = () => {
+    drag.current.active = false;
+    setDragging(false);
+    setRot((r) => ({ ...r, x: 0 })); // spring the tilt back, keep the spin
+  };
 
   return (
     <section
@@ -115,22 +148,48 @@ export const FeaturedSlider = () => {
             </div>
           </div>
 
-          {/* Product image */}
+          {/* Product image — drag to rotate in 3D */}
           <div className="relative order-1 flex h-[380px] items-center justify-center md:order-2 md:h-[480px]">
             <div className="absolute h-72 w-72 rounded-full blur-3xl" style={{ background: `rgba(${theme.glow}, 0.3)` }} />
-            <AnimatePresence mode="wait" custom={dir}>
-              <motion.img
-                key={active.id}
-                src={active.image}
-                alt={active.name}
-                custom={dir}
-                initial={{ opacity: 0, x: dir * 120, rotate: dir * 8 }}
-                animate={{ opacity: 1, x: 0, rotate: 0 }}
-                exit={{ opacity: 0, x: dir * -120, rotate: dir * -8 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="shine float-slow relative z-10 max-h-[420px] w-auto object-contain drop-shadow-[0_40px_60px_rgba(0,0,0,0.2)]"
-              />
-            </AnimatePresence>
+
+            {/* drag hint */}
+            <div className="pointer-events-none absolute top-2 z-20 flex items-center gap-1.5 rounded-full bg-white/70 px-3 py-1.5 text-[11px] font-semibold text-vita-ink backdrop-blur">
+              <Move3d size={13} className="text-vita-blue" /> Drag to rotate
+            </div>
+
+            <div
+              className="relative z-10 flex h-full w-full touch-none select-none items-center justify-center"
+              style={{ perspective: "1200px", cursor: dragging ? "grabbing" : "grab" }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerLeave={onPointerUp}
+              data-testid="featured-3d"
+            >
+              <div
+                className="relative"
+                style={{
+                  transformStyle: "preserve-3d",
+                  transform: `rotateX(${rot.x}deg) rotateY(${rot.y}deg)`,
+                  transition: dragging ? "none" : "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
+                }}
+              >
+                <AnimatePresence mode="wait" custom={dir}>
+                  <motion.img
+                    key={active.id}
+                    src={active.image}
+                    alt={active.name}
+                    custom={dir}
+                    draggable={false}
+                    initial={{ opacity: 0, x: dir * 120 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: dir * -120 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className={`shine ${dragging ? "" : "float-slow"} pointer-events-none max-h-[420px] w-auto object-contain drop-shadow-[0_40px_60px_rgba(0,0,0,0.2)]`}
+                  />
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
         </div>
       </div>
