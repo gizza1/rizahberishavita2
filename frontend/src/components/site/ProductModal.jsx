@@ -137,7 +137,7 @@ export const ProductModal = ({ product, onClose, onSelect }) => {
                           key={r.id}
                           onClick={() => onSelect(r)}
                           data-testid={`related-${r.id}`}
-                          className="group flex-1 rounded-2xl bg-vita-bg p-2 text-center transition-transform hover:-translate-y-1"
+                          className="group min-w-0 flex-1 rounded-2xl bg-vita-bg p-2 text-center transition-transform hover:-translate-y-1"
                         >
                           <img src={r.image} alt={r.name} className="mx-auto h-20 w-auto object-contain" />
                           <p className="mt-1 truncate text-[11px] font-medium text-vita-ink">{r.name}</p>
