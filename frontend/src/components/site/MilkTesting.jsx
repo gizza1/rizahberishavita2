@@ -46,7 +46,8 @@ export const MilkTesting = () => {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.6, delay: (i % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 data-testid={`milk-test-${i}`}
-                className="cursor-grow group relative overflow-hidden rounded-[1.5rem] border border-white/60 bg-white p-6 soft-shadow transition-transform duration-300 hover:-translate-y-2"
+                whileHover={{ y: -8 }}
+                className="cursor-grow group relative overflow-hidden rounded-[1.5rem] border border-white/60 bg-white p-6 soft-shadow"
               >
                 <span className="absolute right-4 top-4 font-display text-3xl font-black text-vita-blue/10">
                   {String(i + 1).padStart(2, "0")}

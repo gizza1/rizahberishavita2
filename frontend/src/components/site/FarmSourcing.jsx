@@ -53,7 +53,7 @@ export const FarmSourcing = () => {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* Left: big stat + copy */}
           <div>
-            <Eyebrow num="09">Farm to VITA</Eyebrow>
+            <Eyebrow num="03">Farm to VITA</Eyebrow>
             <Reveal>
               <div className="flex items-end gap-3">
                 <span className="font-display text-7xl font-black leading-none text-gradient sm:text-8xl">
@@ -118,7 +118,8 @@ export const FarmSourcing = () => {
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.08, type: "spring", stiffness: 260, damping: 18 }}
                         data-testid={`farm-form-${i}`}
-                        className="cursor-grow group flex flex-col items-center gap-2 rounded-2xl bg-white p-3 soft-shadow transition-transform duration-300 hover:-translate-y-1.5"
+                        whileHover={{ y: -6 }}
+                        className="cursor-grow group flex flex-col items-center gap-2 rounded-2xl bg-white p-3 soft-shadow"
                       >
                         <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-vita-greenlight text-vita-green transition-colors duration-300 group-hover:bg-vita-green group-hover:text-white">
                           <Icon size={20} />

@@ -68,7 +68,7 @@ export const FarmToTable = () => {
       <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-10">
         <div className="text-center">
           <div className="flex justify-center">
-            <Eyebrow num="03">From Farm to You</Eyebrow>
+            <Eyebrow num="04">From Farm to You</Eyebrow>
           </div>
           <Reveal>
             <h2 className="font-display text-4xl font-extrabold tracking-tight text-vita-ink sm:text-5xl lg:text-6xl">
