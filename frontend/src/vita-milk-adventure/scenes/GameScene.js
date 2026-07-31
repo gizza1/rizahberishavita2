@@ -16,6 +16,8 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.level = getLevel(this.levelId);
+    this.platformOffsetY = 15;
+    this.level.groundY = 668 + this.platformOffsetY;
     this.levelIndex = LEVELS.findIndex((level) => level.id === this.level.id);
     this.physics.world.setBounds(0, 0, this.level.worldWidth, this.level.worldHeight + 180);
     this.cameras.main.setBounds(0, 0, this.level.worldWidth, this.level.worldHeight);
@@ -24,20 +26,22 @@ export class GameScene extends Phaser.Scene {
     FarmEnvironment.create(this, this.level);
     this.player = new Player(this, this.level.spawn.x, this.level.spawn.y);
     this.platforms = new PlatformSystem(this, this.player);
-    this.level.staticPlatforms.forEach(([x, y, width]) => this.platforms.addStatic(x, y, width));
-    this.level.floatingPlatforms.forEach(([x, y, width]) => this.platforms.addFloating(x, y, width));
-    this.level.bouncePlatforms.forEach(([x, y, width]) => this.platforms.addBounce(x, y, width));
-    (this.level.movingPlatforms || []).forEach(([x, y, width, axis]) => this.platforms.addMoving(x, y, width, { axis, distance: 120 }));
-    (this.level.hiddenPlatforms || []).forEach(([x, y, width]) => this.platforms.addHidden(x, y, width));
-    (this.level.disappearingPlatforms || []).forEach(([x, y, width]) => this.platforms.addDisappearing(x, y, width));
-    (this.level.conveyors || []).forEach(([x, y, width, direction]) => this.platforms.addConveyor(x, y, width, direction));
+    this.level.staticPlatforms.forEach(([x, y, width]) => this.platforms.addStatic(x, y + this.platformOffsetY, width));
+    this.level.floatingPlatforms.forEach(([x, y, width]) => this.platforms.addFloating(x, y + this.platformOffsetY, width));
+    this.level.bouncePlatforms.forEach(([x, y, width]) => this.platforms.addBounce(x, y + this.platformOffsetY, width));
+    (this.level.movingPlatforms || []).forEach(([x, y, width, axis]) => this.platforms.addMoving(x, y + this.platformOffsetY, width, { axis, distance: 120 }));
+    (this.level.hiddenPlatforms || []).forEach(([x, y, width]) => this.platforms.addHidden(x, y + this.platformOffsetY, width));
+    (this.level.disappearingPlatforms || []).forEach(([x, y, width]) => this.platforms.addDisappearing(x, y + this.platformOffsetY, width));
+    (this.level.conveyors || []).forEach(([x, y, width, direction]) => this.platforms.addConveyor(x, y + this.platformOffsetY, width, direction));
     this.obstacles = new ObstacleSystem(this, this.player, () => this._loseLife());
-    this.level.spikes.forEach(([x, y]) => this.obstacles.addSpike(x, y));
+    this.level.spikes.forEach(([x, y]) => this.obstacles.addSpike(x, y + this.platformOffsetY));
     this.collectibles = new CollectibleSystem(this, this.player, ({ scoreValue }) => this._collectMilk(scoreValue));
     this.level.bottles.forEach(([x, y], index) => {
       this.collectibles.addMilkBottle(x, y, 100, this.level.hiddenBottleIndexes?.includes(index));
     });
-    this.goal = this.add.image(this.level.factory.x, this.level.factory.y, "farm-factory").setOrigin(0.5, 1).setDepth(4);
+    const factoryY = this.level.factory.y + this.platformOffsetY;
+    this.goal = this.add.image(this.level.factory.x, factoryY, "farm-factory").setOrigin(0.5, 1).setDepth(4);
+    this.factoryLogo = this.add.image(this.level.factory.x, factoryY - 72, "vita-logo").setDisplaySize(76, 68).setDepth(12);
     this.physics.add.existing(this.goal, true);
     this.goal.body.setSize(120, 130).setOffset(20, 18);
     this.goal.body.updateFromGameObject();

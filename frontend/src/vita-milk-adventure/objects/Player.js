@@ -5,7 +5,8 @@ const TUNING = {
   acceleration: 2200,
   deceleration: 1900,
   airAcceleration: 1450,
-  jumpVelocity: -510,
+  jumpVelocity: -516,
+  spaceJumpVelocity: -730,
   doubleJumpVelocity: -470,
   coyoteTime: 110,
   jumpBufferTime: 120,
@@ -20,6 +21,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.setCollideWorldBounds(true);
     this.body.setMaxVelocity(TUNING.maxSpeed, 900);
     this.body.setDragX(TUNING.deceleration);
+    this.setDepth(30);
+    this.logo = scene.add.image(x, y + 8, "vita-logo").setDisplaySize(21, 19).setDepth(31);
 
     this.cursors = scene.input.keyboard.createCursorKeys();
     this.keys = scene.input.keyboard.addKeys("A,D,W,SPACE");
@@ -30,6 +33,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.animationState = "idle";
     this.hurtUntil = 0;
     this.touchInput = { left: false, right: false, jump: false };
+    this.lastSpaceJumpAt = -Infinity;
+    this.queuedJumpVelocity = TUNING.jumpVelocity;
   }
 
   update(time, delta) {
@@ -38,10 +43,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const grounded = body.blocked.down || body.touching.down;
     const left = this.cursors.left.isDown || this.keys.A.isDown || this.touchInput.left;
     const right = this.cursors.right.isDown || this.keys.D.isDown || this.touchInput.right;
-    const jumpPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+    const spacePressed = Phaser.Input.Keyboard.JustDown(this.keys.SPACE);
+    const normalJumpPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
       || Phaser.Input.Keyboard.JustDown(this.keys.W)
-      || Phaser.Input.Keyboard.JustDown(this.keys.SPACE)
       || (this.touchInput.jump && !this.jumpWasTouched);
+    const jumpPressed = normalJumpPressed || spacePressed;
     this.jumpWasTouched = this.touchInput.jump;
 
     if (grounded) {
@@ -51,7 +57,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     }
     this.jumpBufferTimer = Math.max(0, this.jumpBufferTimer - dt);
-    if (jumpPressed) this.jumpBufferTimer = TUNING.jumpBufferTime;
+    if (jumpPressed) {
+      this.jumpBufferTimer = TUNING.jumpBufferTime;
+      this.queuedJumpVelocity = spacePressed ? TUNING.spaceJumpVelocity : TUNING.jumpVelocity;
+    }
+    if (spacePressed && time - this.lastSpaceJumpAt < 300 && this.jumpsUsed === 1 && !grounded) {
+      this._jump(TUNING.doubleJumpVelocity);
+    }
+    if (spacePressed) this.lastSpaceJumpAt = time;
 
     const direction = Number(right) - Number(left);
     if (direction !== 0) {
@@ -64,7 +77,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (this.jumpBufferTimer > 0) {
       if (grounded || this.coyoteTimer > 0) {
-        this._jump(TUNING.jumpVelocity);
+        this._jump(this.queuedJumpVelocity);
       } else if (this.jumpsUsed === 1) {
         this._jump(TUNING.doubleJumpVelocity);
       }
@@ -75,6 +88,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     if (!jumpHeld && body.velocity.y < -220) body.setVelocityY(-220);
 
     this._animate(time, grounded, direction);
+    this.logo.setPosition(this.x, this.y + 8).setAlpha(this.alpha);
     this.wasGrounded = grounded;
   }
 
@@ -114,15 +128,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (nextState === "run") {
-      const stride = Math.sin(time * 0.018);
-      this.setScale(1 + Math.abs(stride) * 0.05, 1 - Math.abs(stride) * 0.05);
-      this.setAngle(stride * 3);
+      this.setScale(1);
+      this.setAngle(0);
     } else if (nextState === "jump") {
-      this.setScale(0.94, 1.06);
-      this.setAngle(Phaser.Math.Clamp(this.body.velocity.y * 0.012, -8, 8));
+      this.setScale(1);
+      this.setAngle(0);
     } else {
-      const bob = Math.sin(time * 0.005) * 0.018;
-      this.setScale(1 + bob, 1 - bob);
+      this.setScale(1);
       this.setAngle(0);
     }
   }

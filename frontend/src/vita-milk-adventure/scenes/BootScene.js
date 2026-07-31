@@ -5,6 +5,10 @@ export class BootScene extends Phaser.Scene {
     super("BootScene");
   }
 
+  preload() {
+    this.load.image("vita-logo", "/vita.png");
+  }
+
   create() {
     this._createPlayerTextures();
     this._createPlatformTextures();
@@ -59,15 +63,12 @@ export class BootScene extends Phaser.Scene {
 
   _createMilkTexture() {
     const graphic = this.add.graphics();
-    graphic.fillStyle(0xf8fcff, 1);
-    graphic.fillRoundedRect(3, 10, 26, 32, 5);
-    graphic.fillStyle(0x0753a4, 1);
-    graphic.fillRoundedRect(9, 2, 14, 12, 3);
-    graphic.fillStyle(0x1b74bf, 1);
-    graphic.fillRect(6, 24, 20, 12);
-    graphic.fillStyle(0xffffff, 0.9);
-    graphic.fillRect(10, 27, 12, 5);
-    graphic.generateTexture("milk-bottle", 32, 44);
+    graphic.fillStyle(0xf8fcff, 1).fillRoundedRect(3, 10, 30, 39, 6);
+    graphic.fillStyle(0x0753a4, 1).fillRoundedRect(10, 2, 16, 13, 3);
+    graphic.fillStyle(0x1a72bf, 1).fillRoundedRect(5, 24, 26, 18, 4);
+    graphic.fillStyle(0xffffff, 0.38).fillRect(7, 14, 5, 28);
+    graphic.fillStyle(0xd7e4ef, 1).fillRect(4, 43, 28, 3);
+    graphic.generateTexture("milk-bottle", 36, 50);
     graphic.destroy();
   }
 
