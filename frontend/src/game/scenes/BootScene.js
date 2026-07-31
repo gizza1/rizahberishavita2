@@ -7,6 +7,11 @@ export class BootScene extends Phaser.Scene {
     super("BootScene");
   }
 
+  preload() {
+    // Shared brand artwork used on factories and milk pickups.
+    this.load.image("vita_logo", "/vita.png");
+  }
+
   create() {
     // Generate all textures procedurally
     this._genGroundTexture();

@@ -69,14 +69,16 @@ export class GameScene extends Phaser.Scene {
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
     this.platformGroup = this.physics.add.staticGroup();
     level.platforms.forEach(({ x, y, w }) => {
-      const tileCount = Math.ceil(w / 32);
-      for (let i = 0; i < tileCount; i++) {
-        const px = x + i * 32 + 16;
+      for (let offsetX = 0; offsetX < w; offsetX += 32) {
+        const tileW = Math.min(32, w - offsetX);
+        const px = x + offsetX + tileW / 2;
         const p = this.add.image(px, y, "platform")
-          .setDepth(DEPTH.platforms);
+          .setDepth(DEPTH.platforms)
+          .setDisplaySize(tileW, 16);
         this.platformGroup.add(p);
-        p.body.setSize(32, 16);
-        p.body.setOffset(-16, -8);
+        // The physics body is exactly the rendered platform tile.
+        p.body.setSize(tileW, 16);
+        p.body.setOffset(0, 0);
       }
     });
 
@@ -119,9 +121,15 @@ export class GameScene extends Phaser.Scene {
       this.milkGroup.add(m);
       m.body.setSize(m.width * tier.size * 0.7, m.height * tier.size * 0.7);
       m.body.setOffset(-m.width * tier.size * 0.35, -m.height * tier.size * 0.35);
+      // Put the supplied Vita logo directly on every collectible milk bottle/carton.
+      const logoWidth = type === "large" ? 20 : type === "medium" ? 17 : 14;
+      const milkLogo = this.add.image(x, y + 5, "vita_logo")
+        .setDisplaySize(logoWidth, logoWidth * 0.92)
+        .setDepth(DEPTH.pickups + 0.1);
+      m.setData("logo", milkLogo);
       // Float + sparkle animation
       this.tweens.add({
-        targets: m, y: y - 6,
+        targets: [m, milkLogo], y: y - 6,
         duration: 1200, yoyo: true, repeat: -1, ease: "Sine.easeInOut",
       });
       // Golden ones pulse
@@ -187,11 +195,15 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.obstacleMgr.spikeGroup, this._hitObstacle, null, this);
 
     // --- Factory (end goal) ---
-    this.factory = this.add.image(level.factoryX, 490, "factory")
+    const factoryBaseY = this._groundYAt(level, level.factoryX);
+    this.factory = this.add.image(level.factoryX, factoryBaseY, "factory")
       .setDepth(DEPTH.factory).setOrigin(0.5, 1).setScale(1.3);
+    this.factoryLogo = this.add.image(level.factoryX, factoryBaseY - 84, "vita_logo")
+      .setDisplaySize(82, 75)
+      .setDepth(DEPTH.factory + 0.1);
 
     // Factory glow
-    const glow = this.add.circle(level.factoryX, 480, 50, 0xFFD700, 0.08)
+    const glow = this.add.circle(level.factoryX, factoryBaseY - 10, 50, 0xFFD700, 0.08)
       .setDepth(DEPTH.factory - 1);
     this.tweens.add({
       targets: glow,
@@ -204,10 +216,10 @@ export class GameScene extends Phaser.Scene {
     });
 
     // Factory chimney smoke
-    this.vfx.spawnFactorySmoke(level.factoryX, 490);
+    this.vfx.spawnFactorySmoke(level.factoryX, factoryBaseY);
 
     // Factory trigger zone
-    this.factoryZone = this.add.zone(level.factoryX, 490, 80, 120)
+    this.factoryZone = this.add.zone(level.factoryX, factoryBaseY, 80, 120)
       .setOrigin(0.5, 1);
     this.physics.world.enable(this.factoryZone);
     this.factoryZone.body.setAllowGravity(false);
@@ -360,6 +372,11 @@ export class GameScene extends Phaser.Scene {
 
   // ─── Collision handlers ───
 
+  _groundYAt(level, x) {
+    const segment = level.groundSegments.find(([start, end]) => x >= start && x <= end);
+    return segment ? segment[2] : GAME_HEIGHT - 100;
+  }
+
   _collectMilk(player, milk) {
     const value = milk.getData("value") || 5;
     const type = milk.getData("type") || "small";
@@ -368,6 +385,7 @@ export class GameScene extends Phaser.Scene {
 
     // Disable physics immediately
     milk.body.enable = false;
+    const milkLogo = milk.getData("logo");
     milk.setDepth(DEPTH.hudFly);
 
     // Fly toward HUD bottle position (top-left, accounting for camera scroll)
@@ -375,11 +393,9 @@ export class GameScene extends Phaser.Scene {
     const hudTargetY = 100;
 
     this.tweens.add({
-      targets: milk,
+      targets: milkLogo ? [milk, milkLogo] : milk,
       x: hudTargetX,
       y: hudTargetY,
-      scaleX: 0.5,
-      scaleY: 0.5,
       alpha: 0.7,
       duration: 400,
       ease: "Cubic.easeIn",
@@ -387,8 +403,16 @@ export class GameScene extends Phaser.Scene {
         const amt = player.collectMilk(value);
         this._updateBottleFill(amt);
         this._playPickupSound(type);
+        milkLogo?.destroy();
         milk.destroy();
       },
+    });
+    this.tweens.add({
+      targets: milk,
+      scaleX: 0.5,
+      scaleY: 0.5,
+      duration: 400,
+      ease: "Cubic.easeIn",
     });
 
     // Particle burst at pickup location

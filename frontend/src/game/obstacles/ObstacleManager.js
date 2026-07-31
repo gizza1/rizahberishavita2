@@ -150,10 +150,11 @@ export class ObstacleManager {
 
   _spawnSpike(o) {
     const s = this.scene.add.image(o.x, o.y, "spike")
-      .setDepth(DEPTH.obstacles).setOrigin(0.5, 1);
+      .setDepth(DEPTH.obstacles).setOrigin(0.5, 1).setScale(0.82);
     this.spikeGroup.add(s);
-    s.body.setSize(16, 14);
-    s.body.setOffset(-8, -14);
+    // Smaller hazard, with a body that exactly matches the rendered spike.
+    s.body.setSize(20 * 0.82, 18 * 0.82);
+    s.body.setOffset(0, 0);
   }
 
   _spawnCow(o) {
@@ -210,10 +211,10 @@ export class ObstacleManager {
     if (o.falling) {
       // Falls from above
       const h = this.scene.add.image(o.x, o.y, "hay")
-        .setDepth(DEPTH.obstacles).setOrigin(0.5, 0.5);
+        .setDepth(DEPTH.obstacles).setOrigin(0.5, 0.5).setScale(0.82);
       this.scene.physics.world.enable(h);
-      h.body.setSize(36, 24);
-      h.body.setOffset(-18, -12);
+      h.body.setSize(36 * 0.82, 24 * 0.82);
+      h.body.setOffset(0, 0);
       h.body.setBounce(0.2);
       h.body.setDrag(100);
       this.scene.physics.add.collider(h, groundGroup);
@@ -222,10 +223,12 @@ export class ObstacleManager {
     } else {
       // Static
       const h = this.scene.add.image(o.x, o.y, "hay")
-        .setDepth(DEPTH.obstacles).setOrigin(0.5, 1);
+        .setDepth(DEPTH.obstacles).setOrigin(0.5, 1).setScale(0.82);
       this.spikeGroup.add(h);
-      h.body.setSize(34, 22);
-      h.body.setOffset(-17, -22);
+      // Hay bales are the game's box obstacles; keep their collision box flush
+      // with the smaller visible bale.
+      h.body.setSize(36 * 0.82, 24 * 0.82);
+      h.body.setOffset(0, 0);
     }
   }
 
