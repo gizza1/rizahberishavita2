@@ -197,16 +197,13 @@ export class GameScene extends Phaser.Scene {
     this.obstacleMgr.spawnAll(level, this.groundGroup);
     this.physics.add.overlap(this.player, this.obstacleMgr.spikeGroup, this._hitObstacle, null, this);
 
-    // --- Factory (end goal) ---
+    // --- Vita factory (shared end goal for every level) ---
     const factoryBaseY = this._groundYAt(level, level.factoryX);
-    this.factory = this.add.image(level.factoryX, factoryBaseY, "factory")
-      .setDepth(DEPTH.factory).setOrigin(0.5, 1).setScale(1.3);
-    this.factoryLogo = this.add.image(level.factoryX, factoryBaseY - 84, "vita_logo")
-      .setDisplaySize(82, 75)
-      .setDepth(DEPTH.factory + 0.1);
+    this.factory = this.add.image(level.factoryX, factoryBaseY, "vitaFactory")
+      .setDepth(DEPTH.factory).setOrigin(0.5, 1).setScale(0.4);
 
     // Factory glow
-    const glow = this.add.circle(level.factoryX, factoryBaseY - 10, 50, 0xFFD700, 0.08)
+    const glow = this.add.circle(level.factoryX, factoryBaseY - 45, 130, 0xFFD700, 0.08)
       .setDepth(DEPTH.factory - 1);
     this.tweens.add({
       targets: glow,
@@ -218,16 +215,13 @@ export class GameScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    // Factory chimney smoke
-    this.vfx.spawnFactorySmoke(level.factoryX, factoryBaseY);
-
     // Factory trigger zone
-    this.factoryZone = this.add.zone(level.factoryX, factoryBaseY, 80, 120)
+    this.factoryZone = this.add.zone(level.factoryX, factoryBaseY, 180, 110)
       .setOrigin(0.5, 1);
     this.physics.world.enable(this.factoryZone);
     this.factoryZone.body.setAllowGravity(false);
     this.factoryZone.body.setImmovable(true);
-    this.factoryZone.body.setSize(80, 120);
+    this.factoryZone.body.setSize(180, 110);
     this.physics.add.overlap(this.player, this.factoryZone, this._reachFactory, null, this);
 
     // --- Camera ---

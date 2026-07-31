@@ -10,6 +10,7 @@ export class BootScene extends Phaser.Scene {
   preload() {
     // Shared brand artwork used on factories and milk pickups.
     this.load.image("vita_logo", "/vita.png");
+    this.load.image("vitaFactory", "/game-assets/vita-factory.png");
   }
 
   create() {
