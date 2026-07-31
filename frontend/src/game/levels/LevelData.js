@@ -3,7 +3,7 @@
 //   pickups (typed), obstacles, coins, checkpoints, movingPlatforms }
 // New: coins[], checkpoints[], movingPlatforms[]
 
-export const LEVELS = [
+const BASE_LEVELS = [
   // ═══════════════════════════════════════════
   // LEVEL 1 — FARM (tutorial)
   // ═══════════════════════════════════════════
@@ -472,3 +472,49 @@ export const LEVELS = [
     ],
   },
 ];
+
+// Shared layout tuning: wider routes make every map feel more expansive, while
+// lower airborne platforms make the full campaign easier to jump through.
+const MAP_WIDTH_SCALE = 1.12;
+const PLATFORM_DROP = 45;
+const elevatedY = (y) => (y < 540 ? y + PLATFORM_DROP : y);
+
+export const LEVELS = BASE_LEVELS.map((level) => ({
+  ...level,
+  worldWidth: Math.round(level.worldWidth * MAP_WIDTH_SCALE),
+  factoryX: Math.round(level.factoryX * MAP_WIDTH_SCALE),
+  groundSegments: level.groundSegments.map(([start, end, y]) => [
+    Math.round(start * MAP_WIDTH_SCALE),
+    Math.round(end * MAP_WIDTH_SCALE),
+    y,
+  ]),
+  platforms: level.platforms.map((platform) => ({
+    ...platform,
+    x: Math.round(platform.x * MAP_WIDTH_SCALE),
+    w: Math.round(platform.w * MAP_WIDTH_SCALE),
+    y: platform.y + PLATFORM_DROP,
+  })),
+  movingPlatforms: (level.movingPlatforms || []).map((platform) => ({
+    ...platform,
+    x: Math.round(platform.x * MAP_WIDTH_SCALE),
+    w: Math.round(platform.w * MAP_WIDTH_SCALE),
+    range: Math.round(platform.range * MAP_WIDTH_SCALE),
+    y: platform.y + PLATFORM_DROP,
+  })),
+  pickups: level.pickups.map((pickup) => ({
+    ...pickup,
+    x: Math.round(pickup.x * MAP_WIDTH_SCALE),
+    y: elevatedY(pickup.y),
+  })),
+  coins: (level.coins || []).map(([x, y]) => [
+    Math.round(x * MAP_WIDTH_SCALE),
+    elevatedY(y),
+  ]),
+  checkpoints: (level.checkpoints || []).map((x) => Math.round(x * MAP_WIDTH_SCALE)),
+  obstacles: level.obstacles.map((obstacle) => ({
+    ...obstacle,
+    x: Number.isFinite(obstacle.x) ? Math.round(obstacle.x * MAP_WIDTH_SCALE) : obstacle.x,
+    w: Number.isFinite(obstacle.w) ? Math.round(obstacle.w * MAP_WIDTH_SCALE) : obstacle.w,
+    range: Number.isFinite(obstacle.range) ? Math.round(obstacle.range * MAP_WIDTH_SCALE) : obstacle.range,
+  })),
+}));
