@@ -4,6 +4,10 @@ export default function VitaGame() {
   const containerRef = useRef(null);
   const gameRef = useRef(null);
 
+  const enterFullscreen = () => {
+    containerRef.current?.requestFullscreen?.();
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -23,22 +27,19 @@ export default function VitaGame() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a1a2a] flex flex-col items-center pt-6">
-      <div className="text-center mb-4">
-        <h1 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-          Vita Milk Adventure
-        </h1>
-        <p className="mt-2 text-sm text-slate-400">
-          The modular Phaser foundation for a fresh 2D platform adventure.
-        </p>
-      </div>
-
+    <div className="fixed inset-0 z-[1000] h-screen w-screen bg-[#0a1a2a]">
       <div
         id="vita-game-container"
         ref={containerRef}
-        className="vita-milk-adventure rounded-xl overflow-hidden shadow-2xl border border-white/5"
-        style={{ width: "100%", maxWidth: "1280px", aspectRatio: "16/9" }}
+        className="vita-milk-adventure h-full w-full overflow-hidden"
       />
+      <button
+        type="button"
+        onClick={enterFullscreen}
+        className="absolute right-4 top-4 z-[1002] rounded-full border border-white/30 bg-[#0a3f83]/80 px-4 py-2 text-xs font-bold text-white backdrop-blur transition hover:bg-[#0a3f83]"
+      >
+        Full screen
+      </button>
     </div>
   );
 }

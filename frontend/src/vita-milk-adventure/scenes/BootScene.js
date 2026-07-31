@@ -19,7 +19,7 @@ export class BootScene extends Phaser.Scene {
     this._createPlatformTextures();
     this._createMilkTexture();
     this._createWorldTextures();
-    this.scene.start("MenuScene");
+    this.scene.start("IntroScene");
   }
 
   _createPlayerTextures() {

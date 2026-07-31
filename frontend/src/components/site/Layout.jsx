@@ -52,6 +52,8 @@ const AnimatedRoutes = () => {
 };
 
 export const Layout = () => {
+  const location = useLocation();
+  const isGameRoute = location.pathname === "/vita-game";
   const [loading, setLoading] = useState(true);
   const [closing, setClosing] = useState(false);
   const [showTop, setShowTop] = useState(false);
@@ -103,11 +105,11 @@ export const Layout = () => {
         className="fixed inset-x-0 top-0 z-[950] h-1 origin-left bg-gradient-to-r from-vita-blue to-vita-green"
       />
 
-      <FloatingParticles count={12} />
+      {!isGameRoute && <FloatingParticles count={12} />}
 
-      <Navbar />
+      {!isGameRoute && <Navbar />}
       <AnimatedRoutes />
-      <Footer />
+      {!isGameRoute && <Footer />}
 
       <AnimatePresence>
         {showTop && (
