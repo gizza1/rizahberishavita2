@@ -79,7 +79,7 @@ export const Footer = () => {
         <div className="mt-16 grid gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <div className="flex items-center">
-              <img src="/vita.png" alt="VITA" className="h-12 w-auto object-contain brightness-0 invert" />
+              <img src="/vita.png" alt="VITA" className="h-12 w-auto object-contain" />
             </div>
             <p className="mt-4 max-w-xs text-sm text-white/60">
               Fresh Thinking. Fresh Dairy. Kosovo&apos;s leading dairy producer since 2003 — from our

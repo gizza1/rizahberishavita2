@@ -23,7 +23,7 @@ export class GameScene extends Phaser.Scene {
     this.lastCheckpointY = data.checkpointY ?? 400;
     this.startTime = data.startTime ?? this.time.now;
     this.deathCount = data.deathCount ?? 0;
-    this.lives = data.lives ?? 3;
+    this.lives = data.lives ?? 4;
     this.paused = false;
   }
 
@@ -173,20 +173,23 @@ export class GameScene extends Phaser.Scene {
     this.movingPlatforms = [];
     (level.movingPlatforms || []).forEach((mp) => {
       const container = this.add.container(mp.x, mp.y).setDepth(DEPTH.platforms);
-      const tileW = Math.ceil(mp.w / 32);
-      for (let i = 0; i < tileW; i++) {
-        const px = i * 32 + 16 - mp.w / 2;
-        const p = this.add.image(px, 0, "platform");
+      for (let offsetX = 0; offsetX < mp.w; offsetX += 32) {
+        const tileW = Math.min(32, mp.w - offsetX);
+        const px = offsetX + tileW / 2 - mp.w / 2;
+        const p = this.add.image(px, 0, "platform").setDisplaySize(tileW, 16);
         container.add(p);
       }
-      // Physics body on the container
-      this.physics.world.enable(container);
-      container.body.setSize(mp.w, 16);
-      container.body.setOffset(-mp.w / 2, -8);
-      container.body.setImmovable(true);
-      container.body.setAllowGravity(false);
-      this.physics.add.collider(this.player, container);
-      this.movingPlatforms.push({ container, mp, originX: mp.x, originY: mp.y });
+      // A dedicated zone avoids Container origin offsets that made the collision
+      // body invisible and displaced from the rendered floating platform.
+      const hitbox = this.add.zone(mp.x, mp.y, mp.w, 16).setOrigin(0.5);
+      this.physics.world.enable(hitbox);
+      hitbox.body.setSize(mp.w, 16);
+      hitbox.body.setOffset(0, 0);
+      hitbox.body.setImmovable(true);
+      hitbox.body.setAllowGravity(false);
+      hitbox.body.moves = false;
+      this.physics.add.collider(this.player, hitbox);
+      this.movingPlatforms.push({ container, hitbox, mp, originX: mp.x, originY: mp.y });
     });
 
     // --- Obstacles (via ObstacleManager) ---
@@ -351,15 +354,15 @@ export class GameScene extends Phaser.Scene {
     this.vfx.update(time, delta, this.cameras.main.scrollX);
 
     // Animate moving platforms
-    this.movingPlatforms.forEach(({ container, mp, originX, originY }) => {
+    this.movingPlatforms.forEach(({ container, hitbox, mp, originX, originY }) => {
       const t = (this.time.now / mp.speed) % (Math.PI * 2);
       if (mp.axis === "x") {
         container.x = originX + Math.sin(t) * mp.range;
-        container.body.x = container.x - mp.w / 2;
       } else {
         container.y = originY + Math.sin(t) * mp.range;
-        container.body.y = container.y - 8;
       }
+      hitbox.setPosition(container.x, container.y);
+      hitbox.body.updateFromGameObject();
     });
 
     // Update progress bar

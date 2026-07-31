@@ -24,9 +24,9 @@ export const COLORS = {
 };
 
 export const PHYSICS = {
-  gravity: 1200,
-  playerSpeed: 280,
-  playerJump: -520,
+  gravity: 1100,
+  playerSpeed: 300,
+  playerJump: -570,
   playerBounce: 0.15,
 };
 
@@ -50,7 +50,7 @@ export const MILK = {
 };
 
 // Milk required to complete level (% of total)
-export const MILK_REQUIRED_PCT = 0.6;
+export const MILK_REQUIRED_PCT = 0.5;
 
 // Coins
 export const COIN_VALUE = 1;

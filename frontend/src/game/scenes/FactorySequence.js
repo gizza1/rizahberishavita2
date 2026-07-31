@@ -65,8 +65,10 @@ export class FactorySequence extends Phaser.Scene {
     this.trucks = [];
     for (let i = 0; i < 3; i++) {
       const truck = this.add.image(-100, GAME_HEIGHT - 85, "truck")
-        .setScale(1.4);
-      this.trucks.push(truck);
+        .setScale(1.85);
+      const logo = this.add.image(-78, GAME_HEIGHT - 92, "vita_logo")
+        .setDisplaySize(42, 39);
+      this.trucks.push({ truck, logo });
     }
 
     // ─── Bottle (character) ───
@@ -245,15 +247,16 @@ export class FactorySequence extends Phaser.Scene {
   _step6_Trucks() {
     this.subtitle.setText("Loading delivery trucks...");
     // Trucks drive in and out
-    this.trucks.forEach((truck, i) => {
+    this.trucks.forEach(({ truck, logo }, i) => {
       truck.setAlpha(1);
+      logo.setAlpha(1);
       this.tweens.add({
-        targets: truck,
+        targets: [truck, logo],
         x: GAME_WIDTH + 100,
         duration: 2500,
         delay: i * 800,
         ease: "Cubic.easeIn",
-        onComplete: () => truck.setAlpha(0),
+        onComplete: () => { truck.setAlpha(0); logo.setAlpha(0); },
       });
     });
 
