@@ -30,6 +30,8 @@ const CFG = {
   wallStickMs: 200,      // grace before wall slide starts
 };
 
+const PLAYER_SCALE = 0.9;
+
 export class Player extends Phaser.GameObjects.Container {
   /**
    * @param {Phaser.Scene} scene
@@ -86,15 +88,18 @@ export class Player extends Phaser.GameObjects.Container {
     this.sprite = scene.add.graphics();
     this.add(this.sprite);
     this._drawBottle();
+    this.logo = scene.add.image(0, 2, "vita_logo").setDisplaySize(18, 16);
+    this.add(this.logo);
 
     // ─── Physics ───
     scene.physics.world.enable(this);
     /** @type {Phaser.Physics.Arcade.Body} */
-    this.body.setSize(24, 56);
-    this.body.setOffset(-12, -29);
+    this.body.setSize(24 * PLAYER_SCALE, 56 * PLAYER_SCALE);
+    this.body.setOffset(-12 * PLAYER_SCALE, -29 * PLAYER_SCALE);
     this.body.setCollideWorldBounds(false);
     this.body.setMaxVelocityY(CFG.maxFall);
     this.body.setDrag(0, 0);
+    this.setScale(PLAYER_SCALE);
     this.setDepth(DEPTH.player);
 
     // ─── Particle pools ───
@@ -266,7 +271,7 @@ export class Player extends Phaser.GameObjects.Container {
     this._animateRun(body.velocity.x, this.grounded);
     this._animateAir(body.velocity.y, this.grounded);
     this._smoothSquashStretch(step);
-    this.setScale(this.facing, 1);
+    this.setScale(this.facing * PLAYER_SCALE, PLAYER_SCALE);
     this._updateTrails();
   }
 
@@ -534,8 +539,8 @@ export class Player extends Phaser.GameObjects.Container {
     this.milkCollected += amount;
     this.scene.tweens.add({
       targets: this,
-      scaleX: this.facing * 1.3,
-      scaleY: 1.3,
+      scaleX: this.facing * PLAYER_SCALE * 1.3,
+      scaleY: PLAYER_SCALE * 1.3,
       duration: 100,
       yoyo: true,
     });
@@ -566,14 +571,14 @@ export class Player extends Phaser.GameObjects.Container {
   // ═══════════════════════════════════════════
 
   _setHitboxSlide() {
-    this.body.setSize(32, 32);
-    this.body.setOffset(-16, -10);
+    this.body.setSize(32 * PLAYER_SCALE, 32 * PLAYER_SCALE);
+    this.body.setOffset(-16 * PLAYER_SCALE, -10 * PLAYER_SCALE);
   }
 
   _resetHitbox() {
     if (!this.sliding) {
-      this.body.setSize(24, 56);
-      this.body.setOffset(-12, -29);
+      this.body.setSize(24 * PLAYER_SCALE, 56 * PLAYER_SCALE);
+      this.body.setOffset(-12 * PLAYER_SCALE, -29 * PLAYER_SCALE);
     }
   }
 }

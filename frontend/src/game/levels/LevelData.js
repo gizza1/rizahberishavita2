@@ -476,7 +476,7 @@ const BASE_LEVELS = [
 // Shared layout tuning: wider routes make every map feel more expansive, while
 // lower airborne platforms make the full campaign easier to jump through.
 const MAP_WIDTH_SCALE = 1.12;
-const PLATFORM_DROP = 45;
+const PLATFORM_DROP = 35;
 const elevatedY = (y) => (y < 540 ? y + PLATFORM_DROP : y);
 
 export const LEVELS = BASE_LEVELS.map((level) => ({
