@@ -29,17 +29,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.wasGrounded = false;
     this.animationState = "idle";
     this.hurtUntil = 0;
+    this.touchInput = { left: false, right: false, jump: false };
   }
 
   update(time, delta) {
     const body = this.body;
     const dt = Math.min(delta, 33);
     const grounded = body.blocked.down || body.touching.down;
-    const left = this.cursors.left.isDown || this.keys.A.isDown;
-    const right = this.cursors.right.isDown || this.keys.D.isDown;
+    const left = this.cursors.left.isDown || this.keys.A.isDown || this.touchInput.left;
+    const right = this.cursors.right.isDown || this.keys.D.isDown || this.touchInput.right;
     const jumpPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
       || Phaser.Input.Keyboard.JustDown(this.keys.W)
-      || Phaser.Input.Keyboard.JustDown(this.keys.SPACE);
+      || Phaser.Input.Keyboard.JustDown(this.keys.SPACE)
+      || (this.touchInput.jump && !this.jumpWasTouched);
+    this.jumpWasTouched = this.touchInput.jump;
 
     if (grounded) {
       this.jumpsUsed = 0;
@@ -68,7 +71,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // A short hop is possible by releasing the jump key early.
-    const jumpHeld = this.cursors.up.isDown || this.keys.W.isDown || this.keys.SPACE.isDown;
+    const jumpHeld = this.cursors.up.isDown || this.keys.W.isDown || this.keys.SPACE.isDown || this.touchInput.jump;
     if (!jumpHeld && body.velocity.y < -220) body.setVelocityY(-220);
 
     this._animate(time, grounded, direction);
@@ -80,6 +83,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.jumpsUsed = 1;
     this.jumpBufferTimer = 0;
   }
+
+  setTouchInput(input) { this.touchInput = input; }
 
   takeHit() {
     if (this.scene.time.now < this.hurtUntil) return false;
@@ -95,6 +100,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.jumpsUsed += 1;
     this.coyoteTimer = 0;
     this.jumpBufferTimer = 0;
+    this.scene.events.emit("sound:jump");
   }
 
   _animate(time, grounded, direction) {

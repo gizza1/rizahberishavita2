@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { saveCompletion } from "../lib/ProgressStore";
 
 export class CompletionScene extends Phaser.Scene {
   constructor() {
@@ -11,8 +12,9 @@ export class CompletionScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
-    const { collected, total, score, lives } = this.results;
+    const { collected, total, score, lives, levelId, levelIndex } = this.results;
     const percentage = total ? Math.round((collected / total) * 100) : 0;
+    if (levelId) saveCompletion(levelId, { percentage, score }, levelIndex || 0);
     this.add.rectangle(width / 2, height / 2, width, height, 0x0a3f83);
     this.add.text(width / 2, height / 2 - 130, "LEVEL COMPLETE!", {
       fontFamily: "Arial Black, Arial, sans-serif", fontSize: "42px", color: "#ffffff",
@@ -25,11 +27,11 @@ export class CompletionScene extends Phaser.Scene {
         fontFamily: "Arial Black, Arial, sans-serif", fontSize: "24px", color: "#ffd34d",
       }).setOrigin(0.5);
     }
-    const button = this.add.text(width / 2, height / 2 + 180, "BACK TO MENU", {
+    const button = this.add.text(width / 2, height / 2 + 180, "LEVEL SELECT", {
       fontFamily: "Arial Black, Arial, sans-serif", fontSize: "20px", color: "#0a3f83",
       backgroundColor: "#ffffff", padding: { x: 24, y: 14 },
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    button.on("pointerdown", () => this.scene.start("MenuScene"));
-    this.input.keyboard.once("keydown-SPACE", () => this.scene.start("MenuScene"));
+    button.on("pointerdown", () => this.scene.start("LevelSelectScene"));
+    this.input.keyboard.once("keydown-SPACE", () => this.scene.start("LevelSelectScene"));
   }
 }

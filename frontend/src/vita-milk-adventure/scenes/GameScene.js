@@ -6,6 +6,8 @@ import { CollectibleSystem } from "../objects/CollectibleSystem";
 import { ObstacleSystem } from "../objects/ObstacleSystem";
 import { FarmEnvironment } from "../objects/FarmEnvironment";
 import { GameHud } from "../ui/GameHud";
+import { AudioHooks } from "../ui/AudioHooks";
+import { MobileControls } from "../ui/MobileControls";
 
 export class GameScene extends Phaser.Scene {
   constructor() { super("GameScene"); }
@@ -18,6 +20,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, this.level.worldWidth, this.level.worldHeight + 180);
     this.cameras.main.setBounds(0, 0, this.level.worldWidth, this.level.worldHeight);
     this.state = { collected: 0, required: this.level.requiredMilk, total: this.level.bottles.length, score: 0, lives: 3, complete: false };
+    this.paused = false;
     FarmEnvironment.create(this, this.level);
     this.player = new Player(this, this.level.spawn.x, this.level.spawn.y);
     this.platforms = new PlatformSystem(this, this.player);
@@ -42,6 +45,9 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
     this.cameras.main.setDeadzone(180, 100);
     this.hud = new GameHud(this);
+    this.audio = new AudioHooks(this);
+    this.audio.startMusic();
+    this.mobileControls = new MobileControls(this, this.player);
     this.hud.showMessage(`${this.level.name} · Collect ${this.level.requiredMilk} bottles, then enter the factory`);
     this._refreshHud();
     this.input.keyboard.on("keydown-ESC", () => this._togglePause());
@@ -49,7 +55,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    if (this.state.complete) return;
+    if (this.state.complete || this.paused) return;
     this.player.update(time, delta);
     this.platforms.update(time);
     this.collectibles.update(this.player);
@@ -76,6 +82,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
     this.state.complete = true;
+    this.events.emit("sound:complete");
     const { collected, total, score, lives } = this.state;
     this.scene.start("CompletionScene", { collected, total, score, lives, levelId: this.level.id, levelIndex: this.levelIndex });
   }

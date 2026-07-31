@@ -1,4 +1,11 @@
 .vita-milk-adventure canvas {
   display: block;
   max-width: 100%;
+  touch-action: none;
+}
+
+@media (max-width: 640px) {
+  .vita-milk-adventure {
+    border-radius: 0.5rem;
+  }
 }

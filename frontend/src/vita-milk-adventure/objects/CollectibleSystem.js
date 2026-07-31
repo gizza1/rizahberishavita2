@@ -29,6 +29,10 @@ export class CollectibleSystem {
       targets: bottle, y: bottle.y - 40, scale: 1.5, alpha: 0,
       duration: 280, ease: "Cubic.easeOut",
       onComplete: () => {
+        for (let i = 0; i < 6; i += 1) {
+          const spark = this.scene.add.circle(bottle.x, bottle.y, 3, 0xffd34d, 0.9);
+          this.scene.tweens.add({ targets: spark, x: bottle.x + Phaser.Math.Between(-35, 35), y: bottle.y + Phaser.Math.Between(-35, 15), alpha: 0, duration: 300, onComplete: () => spark.destroy() });
+        }
         bottle.destroy();
         this.onCollect({ scoreValue: value });
         // Placeholder sound hook; replace with an audio asset in production.
