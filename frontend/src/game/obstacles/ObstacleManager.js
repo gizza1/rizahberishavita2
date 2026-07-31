@@ -35,11 +35,14 @@ export class ObstacleManager {
    */
   spawnAll(level, groundGroup) {
     const obs = level.obstacles || [];
+    // Two extra spikes keep every level challenging without hand-positioning
+    // hazards in gaps between ground segments.
+    const groundedSpikes = this._extraGroundedSpikes(level, obs);
 
-    obs.forEach((o) => {
+    [...obs, ...groundedSpikes].forEach((o) => {
       switch (o.type) {
         case "spike":
-          this._spawnSpike(o);
+          this._spawnSpike(o, level);
           break;
         case "cow":
           this._spawnCow(o);
@@ -148,8 +151,11 @@ export class ObstacleManager {
   //  SPAWNERS
   // ═══════════════════════════════════════════
 
-  _spawnSpike(o) {
-    const s = this.scene.add.image(o.x, o.y, "spike")
+  _spawnSpike(o, level) {
+    // Place the spike's bottom edge exactly on the ground below it. Older
+    // level data used a fixed y value, which made spikes float on slopes.
+    const groundY = this._groundYAt(level, o.x) ?? o.y;
+    const s = this.scene.add.image(o.x, groundY, "spike")
       .setDepth(DEPTH.obstacles).setOrigin(0.5, 1).setScale(0.82);
     this.spikeGroup.add(s);
     // Smaller hazard, with a body that exactly matches the rendered spike.
@@ -503,5 +509,31 @@ export class ObstacleManager {
       ...this.cows, ...this.tractors, ...this.cheeseWheels,
       ...this.hayBales, ...this.fences, ...this.steamVents, ...this.machines,
     ];
+  }
+
+  _groundYAt(level, x) {
+    const segment = level.groundSegments?.find(([start, end]) => x >= start && x <= end);
+    return segment?.[2];
+  }
+
+  _extraGroundedSpikes(level, obstacles) {
+    const targets = [level.worldWidth * 0.34, level.worldWidth * 0.68];
+    const occupied = obstacles
+      .filter((obstacle) => Number.isFinite(obstacle.x))
+      .map((obstacle) => obstacle.x);
+
+    return targets.map((target) => {
+      const candidates = (level.groundSegments || [])
+        .filter(([start, end]) => end - start >= 140)
+        .map(([start, end]) => ({
+          x: Phaser.Math.Clamp(target, start + 70, end - 70),
+          distance: Math.abs(target - Phaser.Math.Clamp(target, start + 70, end - 70)),
+        }))
+        .sort((a, b) => a.distance - b.distance);
+      const safe = candidates.find(({ x }) => occupied.every((otherX) => Math.abs(otherX - x) >= 110));
+      const x = (safe || candidates[0]).x;
+      occupied.push(x);
+      return { type: "spike", x };
+    });
   }
 }

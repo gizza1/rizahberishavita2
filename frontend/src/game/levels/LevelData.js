@@ -32,7 +32,6 @@ export const LEVELS = [
     obstacles: [
       // Farm — simple spikes and hay bales
       { type: "spike", x: 500, y: 595 },
-      { type: "hay", x: 1100, y: 595 },
       { type: "spike", x: 2500, y: 595 },
       { type: "milk_spill", x: 3200, y: 612, w: 120, h: 10 },
     ],
