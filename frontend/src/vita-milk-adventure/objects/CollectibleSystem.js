@@ -42,7 +42,9 @@ export class CollectibleSystem {
   }
 
   update(player) {
-    this.bottles.children.iterate((bottle) => {
+    // Phaser 4 groups expose their members through getChildren(); the old
+    // Container-style children.iterate API is not available here.
+    this.bottles.getChildren().forEach((bottle) => {
       if (bottle?.active && bottle.getData("hidden")) {
         const distance = Phaser.Math.Distance.Between(player.x, player.y, bottle.x, bottle.y);
         bottle.setAlpha(distance < 150 ? 1 : 0.2);
