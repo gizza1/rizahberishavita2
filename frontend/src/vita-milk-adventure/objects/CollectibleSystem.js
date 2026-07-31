@@ -48,6 +48,8 @@ export class CollectibleSystem {
   }
 
   update(player) {
+    // Phaser 4 groups expose their members through getChildren(); the old
+    // Container-style children.iterate API is not available here.
     this.bottles.getChildren().forEach((bottle) => {
       if (bottle?.active && !bottle.getData("collecting")) {
         const logo = bottle.getData("logo");

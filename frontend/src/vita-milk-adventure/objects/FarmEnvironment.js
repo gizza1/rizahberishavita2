@@ -1,7 +1,13 @@
 export class FarmEnvironment {
   static create(scene, level) {
     const isFarm = level.theme === "farm";
-    const groundY = level.groundY || 683;
+    const computedGroundY = Math.min(
+      ...level.staticPlatforms
+        .filter(([, y]) => y >= 650)
+        .map(([, y]) => y - 12),
+      683,
+    );
+    const groundY = level.groundY ?? computedGroundY;
     const sky = scene.add.graphics();
     sky.fillStyle(isFarm ? 0x8ed4ef : level.theme === "mega" ? 0x202644 : 0x526474, 1).fillRect(0, 0, level.worldWidth, level.worldHeight);
     sky.fillStyle(isFarm ? 0x9bc98c : 0x6b7c89, 0.8);
