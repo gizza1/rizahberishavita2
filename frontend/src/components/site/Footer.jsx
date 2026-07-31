@@ -8,13 +8,13 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const COLS = [
   { title: "Products", links: ["Milk", "Yogurt", "Cream", "Drinks"] },
-  { title: "Company", links: ["About", "Quality", "Farmers", "Sustainability"] },
+  { title: "Company", links: ["About", "Quality", "Farmers", "Vita Game"] },
   { title: "Discover", links: ["Gallery", "Contact"] },
 ];
 
 const ROUTE_FOR = {
   Milk: "/products", Yogurt: "/products", Cream: "/products", Drinks: "/products",
-  About: "/about", Quality: "/quality", Farmers: "/farmers", Sustainability: "/sustainability",
+  About: "/about", Quality: "/quality", Farmers: "/farmers", "Vita Game": "/vita-game",
   Gallery: "/contact", Contact: "/contact",
 };
 
@@ -78,11 +78,8 @@ export const Footer = () => {
         {/* links */}
         <div className="mt-16 grid gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-vita-blue to-vita-green">
-                <span className="font-display text-lg font-black">V</span>
-              </span>
-              <span className="font-display text-2xl font-extrabold">VITA</span>
+            <div className="flex items-center">
+              <img src="/vita.png" alt="VITA" className="h-12 w-auto object-contain" />
             </div>
             <p className="mt-4 max-w-xs text-sm text-white/60">
               Fresh Thinking. Fresh Dairy. Kosovo&apos;s leading dairy producer since 2003 — from our
