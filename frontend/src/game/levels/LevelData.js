@@ -517,4 +517,28 @@ export const LEVELS = BASE_LEVELS.map((level) => ({
     w: Number.isFinite(obstacle.w) ? Math.round(obstacle.w * MAP_WIDTH_SCALE) : obstacle.w,
     range: Number.isFinite(obstacle.range) ? Math.round(obstacle.range * MAP_WIDTH_SCALE) : obstacle.range,
   })),
-}));
+})).map((level) => {
+  const platformBounds = [
+    ...level.platforms.map((platform) => ({
+      left: platform.x,
+      right: platform.x + platform.w,
+      y: platform.y,
+    })),
+    ...level.movingPlatforms.map((platform) => ({
+      left: platform.x - platform.w / 2,
+      right: platform.x + platform.w / 2,
+      y: platform.y,
+    })),
+  ];
+
+  return {
+    ...level,
+    coins: level.coins.map(([x, y]) => {
+      const platform = platformBounds
+        .filter(({ left, right }) => x >= left && x <= right)
+        .sort((a, b) => Math.abs(a.y - y) - Math.abs(b.y - y))[0];
+      // Coin centers must stay above the platform top, never inside its body.
+      return platform && y > platform.y - 28 ? [x, platform.y - 28] : [x, y];
+    }),
+  };
+});
