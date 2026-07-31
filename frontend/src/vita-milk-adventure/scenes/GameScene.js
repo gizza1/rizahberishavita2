@@ -12,7 +12,7 @@ import { MobileControls } from "../ui/MobileControls";
 export class GameScene extends Phaser.Scene {
   constructor() { super("GameScene"); }
 
-  init(data) { this.levelId = data.levelId; }
+  init(data) { this.levelId = data.levelId; this.characterKey = data.characterKey || "char-milk-32"; }
 
   create() {
     this.level = getLevel(this.levelId);
@@ -24,7 +24,7 @@ export class GameScene extends Phaser.Scene {
     this.state = { collected: 0, required: this.level.requiredMilk, total: this.level.bottles.length, score: 0, lives: 3, complete: false };
     this.paused = false;
     FarmEnvironment.create(this, this.level);
-    this.player = new Player(this, this.level.spawn.x, this.level.spawn.y);
+    this.player = new Player(this, this.level.spawn.x, this.level.spawn.y, this.characterKey);
     this.platforms = new PlatformSystem(this, this.player);
     this.level.staticPlatforms.forEach(([x, y, width]) => this.platforms.addStatic(x, y + this.platformOffsetY, width));
     this.level.floatingPlatforms.forEach(([x, y, width]) => this.platforms.addFloating(x, y + this.platformOffsetY, width));
@@ -39,7 +39,8 @@ export class GameScene extends Phaser.Scene {
     this.level.bottles.forEach(([x, y], index) => {
       this.collectibles.addMilkBottle(x, y, 100, this.level.hiddenBottleIndexes?.includes(index));
     });
-    const factoryY = this.level.factory.y + this.platformOffsetY;
+    // Match the factory base exactly to the ground platform, regardless of level data offsets.
+    const factoryY = this.level.groundY;
     // One shared Vita factory artwork is used as the finish destination in every level.
     this.goal = this.add.image(this.level.factory.x, factoryY, "vita-factory")
       .setOrigin(0.5, 1).setDepth(4).setScale(0.28);
@@ -53,7 +54,7 @@ export class GameScene extends Phaser.Scene {
     this.audio = new AudioHooks(this);
     this.audio.startMusic();
     this.mobileControls = new MobileControls(this, this.player);
-    this.hud.showMessage(`${this.level.name} · Collect ${this.level.requiredMilk} bottles, then enter the factory`);
+    this.hud.showMessage(`LEVEL 1 MISSION: Collect ${this.level.requiredMilk} milk bottles, avoid spikes, then enter the Vita factory!`);
     this._refreshHud();
     this.input.keyboard.on("keydown-ESC", () => this._togglePause());
     this.input.keyboard.on("keydown-R", () => this.scene.restart({ levelId: this.level.id }));
@@ -73,7 +74,7 @@ export class GameScene extends Phaser.Scene {
   _loseLife() {
     if (this.state.complete) return;
     this.state.lives -= 1;
-    if (this.state.lives <= 0) { this.scene.restart(); return; }
+    if (this.state.lives <= 0) { this.scene.restart({ levelId: this.level.id, characterKey: this.characterKey }); return; }
     this.player.setPosition(this.level.spawn.x, this.level.spawn.y);
     this.player.body.setVelocity(0, 0);
     this.hud.showMessage(`Ouch! ${this.state.lives} lives left`);
@@ -89,7 +90,7 @@ export class GameScene extends Phaser.Scene {
     this.state.complete = true;
     this.events.emit("sound:complete");
     const { collected, total, score, lives } = this.state;
-    this.scene.start("CompletionScene", { collected, total, score, lives, levelId: this.level.id, levelIndex: this.levelIndex });
+    this.scene.start("CompletionScene", { collected, total, score, lives, levelId: this.level.id, levelIndex: this.levelIndex, characterKey: this.characterKey });
   }
 
   _refreshHud() { const { collected, required, score, lives } = this.state; this.hud.setStats({ collected, required, score, lives }); }
@@ -112,7 +113,7 @@ export class GameScene extends Phaser.Scene {
     const restart = this.add.text(0, 60, "RESTART LEVEL", { fontFamily: "Arial", fontSize: "18px", color: "#ffffff" }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     const settings = this.add.text(0, 100, "SETTINGS", { fontFamily: "Arial", fontSize: "18px", color: "#ffffff" }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     resume.on("pointerdown", () => this._togglePause());
-    restart.on("pointerdown", () => this.scene.restart({ levelId: this.level.id }));
+    restart.on("pointerdown", () => this.scene.restart({ levelId: this.level.id, characterKey: this.characterKey }));
     settings.on("pointerdown", () => this.scene.start("SettingsScene", { returnTo: "GameScene", levelId: this.level.id }));
     this.pausePanel.add([panel, title, resume, restart, settings]);
   }

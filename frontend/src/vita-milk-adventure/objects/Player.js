@@ -13,16 +13,23 @@ const TUNING = {
 };
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y) {
-    super(scene, x, y, "player-idle");
+  constructor(scene, x, y, characterKey) {
+    super(scene, x, y, characterKey || "player-idle");
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    this.characterKey = characterKey;
     this.body.setSize(26, 46).setOffset(3, 4);
     this.body.setCollideWorldBounds(true);
     this.body.setMaxVelocity(TUNING.maxSpeed, 900);
     this.body.setDragX(TUNING.deceleration);
     this.setDepth(30);
-    this.logo = scene.add.image(x, y + 8, "vita-logo").setDisplaySize(21, 19).setDepth(31);
+    // Keep product characters at the same compact size as the original bottle player.
+    if (this.characterKey) {
+      // A product image is anchored at its base so it always rests on platforms.
+      this.setOrigin(0.5, 1).setDisplaySize(32, 52);
+      this.body.setSize(26, 46).setOffset(3, 6);
+    }
+    this.logo = this.characterKey ? null : scene.add.image(x, y + 8, "vita-logo").setDisplaySize(21, 19).setDepth(31);
 
     this.cursors = scene.input.keyboard.createCursorKeys();
     this.keys = scene.input.keyboard.addKeys("A,D,W,SPACE");
@@ -88,7 +95,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     if (!jumpHeld && body.velocity.y < -220) body.setVelocityY(-220);
 
     this._animate(time, grounded, direction);
-    this.logo.setPosition(this.x, this.y + 8).setAlpha(this.alpha);
+    if (this.logo) this.logo.setPosition(this.x, this.y + 8).setAlpha(this.alpha);
     this.wasGrounded = grounded;
   }
 
@@ -124,18 +131,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (nextState !== this.animationState) {
       this.animationState = nextState;
-      this.setTexture(`player-${nextState}`);
+      if (!this.characterKey) this.setTexture(`player-${nextState}`);
     }
 
-    if (nextState === "run") {
-      this.setScale(1);
-      this.setAngle(0);
-    } else if (nextState === "jump") {
-      this.setScale(1);
-      this.setAngle(0);
-    } else {
-      this.setScale(1);
-      this.setAngle(0);
-    }
+    // Generated bottle sprites use scale 1, but chosen product images have their
+    // own display size and must not be reset to their native image dimensions.
+    if (!this.characterKey) this.setScale(1);
+    this.setAngle(0);
   }
 }

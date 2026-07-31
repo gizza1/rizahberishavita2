@@ -8,6 +8,10 @@ export class BootScene extends Phaser.Scene {
   preload() {
     this.load.image("vita-logo", "/vita.png");
     this.load.image("vita-factory", "/game-assets/vita-factory.png");
+    this.load.image("char-whipping-cream", "/products/whipping_cream.webp");
+    this.load.image("char-milk-32", "/game-assets/characters/milk-32.webp");
+    this.load.image("char-kos", "/game-assets/characters/kos.png");
+    this.load.image("char-cooking-cream", "/game-assets/characters/cooking-cream.png");
   }
 
   create() {

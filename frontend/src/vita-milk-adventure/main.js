@@ -5,6 +5,7 @@ import { MenuScene } from "./scenes/MenuScene";
 import { GameScene } from "./scenes/GameScene";
 import { CompletionScene } from "./scenes/CompletionScene";
 import { LevelSelectScene } from "./scenes/LevelSelectScene";
+import { CharacterSelectScene } from "./scenes/CharacterSelectScene";
 import { SettingsScene } from "./scenes/SettingsScene";
 
 export function createVitaMilkAdventure(parentId) {
@@ -19,6 +20,6 @@ export function createVitaMilkAdventure(parentId) {
       arcade: { gravity: { y: 1100 }, debug: false },
     },
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MenuScene, LevelSelectScene, GameScene, CompletionScene, SettingsScene],
+    scene: [BootScene, MenuScene, CharacterSelectScene, LevelSelectScene, GameScene, CompletionScene, SettingsScene],
   });
 }

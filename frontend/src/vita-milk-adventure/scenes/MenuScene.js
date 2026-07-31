@@ -21,7 +21,7 @@ export class MenuScene extends Phaser.Scene {
     const settings = this.add.text(width / 2, height / 2 + 135, "SETTINGS", {
       fontFamily: "Arial Black, Arial, sans-serif", fontSize: "18px", color: "#0a3f83",
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    const begin = () => this.scene.start("LevelSelectScene");
+    const begin = () => this.scene.start("CharacterSelectScene");
     start.on("pointerdown", begin);
     settings.on("pointerdown", () => this.scene.start("SettingsScene"));
     this.input.keyboard.once("keydown-SPACE", begin);
