@@ -26,7 +26,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Product art is separate from physics, which keeps every package consistently
     // aligned with platforms despite their different source-image proportions.
     if (this.characterKey) {
-      this.setAlpha(0);
+      this.setVisible(false);
       this.characterVisual = scene.add.image(x, y + 4, this.characterKey)
         .setOrigin(0.5, 1)
         .setDisplaySize(32, 52)
@@ -100,7 +100,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this._animate(time, grounded, direction);
     if (this.logo) this.logo.setPosition(this.x, this.y + 8).setAlpha(this.alpha);
     if (this.characterVisual) {
-      this.characterVisual.setPosition(this.x, this.y + 4).setFlipX(this.flipX).setAlpha(this.alpha);
+      this.characterVisual.setPosition(this.x, this.y + 4).setFlipX(this.flipX).setAlpha(1);
     }
     this.wasGrounded = grounded;
   }
