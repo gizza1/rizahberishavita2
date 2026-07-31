@@ -40,10 +40,11 @@ export class GameScene extends Phaser.Scene {
       this.collectibles.addMilkBottle(x, y, 100, this.level.hiddenBottleIndexes?.includes(index));
     });
     const factoryY = this.level.factory.y + this.platformOffsetY;
-    this.goal = this.add.image(this.level.factory.x, factoryY, "farm-factory").setOrigin(0.5, 1).setDepth(4);
-    this.factoryLogo = this.add.image(this.level.factory.x, factoryY - 72, "vita-logo").setDisplaySize(76, 68).setDepth(12);
+    // One shared Vita factory artwork is used as the finish destination in every level.
+    this.goal = this.add.image(this.level.factory.x, factoryY, "vita-factory")
+      .setOrigin(0.5, 1).setDepth(4).setScale(0.28);
     this.physics.add.existing(this.goal, true);
-    this.goal.body.setSize(120, 130).setOffset(20, 18);
+    this.goal.body.setSize(210, 125).setOffset(110, 150);
     this.goal.body.updateFromGameObject();
     this.physics.add.overlap(this.player, this.goal, () => this._tryComplete());
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);

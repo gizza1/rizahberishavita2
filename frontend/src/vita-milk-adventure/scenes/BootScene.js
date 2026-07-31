@@ -7,6 +7,7 @@ export class BootScene extends Phaser.Scene {
 
   preload() {
     this.load.image("vita-logo", "/vita.png");
+    this.load.image("vita-factory", "/game-assets/vita-factory.png");
   }
 
   create() {
