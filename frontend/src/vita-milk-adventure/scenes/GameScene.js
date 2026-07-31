@@ -40,7 +40,9 @@ export class GameScene extends Phaser.Scene {
       this.collectibles.addMilkBottle(x, y, 100, this.level.hiddenBottleIndexes?.includes(index));
     });
     // Match the factory base exactly to the ground platform, regardless of level data offsets.
-    const factoryY = this.level.groundY;
+    // The artwork includes a small shadow margin; lower it so the building itself
+    // visually meets the top of the ground platform.
+    const factoryY = this.level.groundY + 38;
     // One shared Vita factory artwork is used as the finish destination in every level.
     this.goal = this.add.image(this.level.factory.x, factoryY, "vita-factory")
       .setOrigin(0.5, 1).setDepth(4).setScale(0.28);

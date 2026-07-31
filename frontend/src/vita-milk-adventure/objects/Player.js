@@ -14,7 +14,7 @@ const TUNING = {
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, characterKey) {
-    super(scene, x, y, characterKey || "player-idle");
+    super(scene, x, y, "player-idle");
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.characterKey = characterKey;
@@ -23,11 +23,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.setMaxVelocity(TUNING.maxSpeed, 900);
     this.body.setDragX(TUNING.deceleration);
     this.setDepth(30);
-    // Keep product characters at the same compact size as the original bottle player.
+    // Product art is separate from physics, which keeps every package consistently
+    // aligned with platforms despite their different source-image proportions.
     if (this.characterKey) {
-      // A product image is anchored at its base so it always rests on platforms.
-      this.setOrigin(0.5, 1).setDisplaySize(32, 52);
-      this.body.setSize(26, 46).setOffset(3, 6);
+      this.setAlpha(0);
+      this.characterVisual = scene.add.image(x, y + 4, this.characterKey)
+        .setOrigin(0.5, 1)
+        .setDisplaySize(32, 52)
+        .setDepth(31);
     }
     this.logo = this.characterKey ? null : scene.add.image(x, y + 8, "vita-logo").setDisplaySize(21, 19).setDepth(31);
 
@@ -96,6 +99,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     this._animate(time, grounded, direction);
     if (this.logo) this.logo.setPosition(this.x, this.y + 8).setAlpha(this.alpha);
+    if (this.characterVisual) {
+      this.characterVisual.setPosition(this.x, this.y + 4).setFlipX(this.flipX).setAlpha(this.alpha);
+    }
     this.wasGrounded = grounded;
   }
 
@@ -134,8 +140,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       if (!this.characterKey) this.setTexture(`player-${nextState}`);
     }
 
-    // Generated bottle sprites use scale 1, but chosen product images have their
-    // own display size and must not be reset to their native image dimensions.
     if (!this.characterKey) this.setScale(1);
     this.setAngle(0);
   }
