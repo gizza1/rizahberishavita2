@@ -13,9 +13,6 @@ export class CollectibleSystem {
     bottle.setData("scoreValue", scoreValue);
     bottle.body.setCircle(13, 2, 2);
     bottle.setAlpha(hidden ? 0.2 : 1).setData("hidden", hidden);
-    this.scene.tweens.add({
-      targets: bottle, y: y - 8, duration: 900, yoyo: true, repeat: -1, ease: "Sine.easeInOut",
-    });
     return bottle;
   }
 

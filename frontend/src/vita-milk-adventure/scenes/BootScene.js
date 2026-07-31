@@ -5,6 +5,10 @@ export class BootScene extends Phaser.Scene {
     super("BootScene");
   }
 
+  preload() {
+    this.load.image("vita-logo", "/vita.png");
+  }
+
   create() {
     this._createPlayerTextures();
     this._createPlatformTextures();

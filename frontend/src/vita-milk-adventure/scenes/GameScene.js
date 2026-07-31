@@ -38,6 +38,9 @@ export class GameScene extends Phaser.Scene {
       this.collectibles.addMilkBottle(x, y, 100, this.level.hiddenBottleIndexes?.includes(index));
     });
     this.goal = this.add.image(this.level.factory.x, this.level.factory.y, "farm-factory").setOrigin(0.5, 1).setDepth(4);
+    this.add.image(this.level.factory.x, this.level.factory.y - 105, "vita-logo")
+      .setDisplaySize(52, 52)
+      .setDepth(5);
     this.physics.add.existing(this.goal, true);
     this.goal.body.setSize(120, 130).setOffset(20, 18);
     this.goal.body.updateFromGameObject();
