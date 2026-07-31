@@ -10,8 +10,8 @@ const LINKS = [
   { label: "About", to: "/about" },
   { label: "Quality", to: "/quality" },
   { label: "Farmers", to: "/farmers" },
-  { label: "Sustainability", to: "/sustainability" },
   { label: "Contact", to: "/contact" },
+  { label: "Vita Game", to: "/vita-game" },
 ];
 
 export const Navbar = () => {
@@ -41,11 +41,8 @@ export const Navbar = () => {
         }`}
       >
         <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 lg:px-10">
-          <NavLink to="/" data-testid="nav-logo" className="group flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-vita-blue to-vita-green text-white shadow-[0_8px_20px_-6px_rgba(0,123,255,0.7)]">
-              <span className="font-display text-lg font-black">V</span>
-            </span>
-            <span className="font-display text-2xl font-extrabold tracking-tight text-vita-ink">VITA</span>
+          <NavLink to="/" data-testid="nav-logo" className="group flex items-center">
+            <img src="/vita.png" alt="VITA" className="h-10 w-auto object-contain" />
           </NavLink>
 
           <ul className="hidden items-center gap-1 lg:flex">

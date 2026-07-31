@@ -16,8 +16,8 @@ import Products from "../../pages/Products";
 import AboutPage from "../../pages/AboutPage";
 import QualityPage from "../../pages/QualityPage";
 import FarmersPage from "../../pages/FarmersPage";
-import SustainabilityPage from "../../pages/SustainabilityPage";
 import ContactPage from "../../pages/ContactPage";
+import VitaGame from "../../pages/VitaGame";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -42,8 +42,8 @@ const AnimatedRoutes = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/quality" element={<QualityPage />} />
           <Route path="/farmers" element={<FarmersPage />} />
-          <Route path="/sustainability" element={<SustainabilityPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/vita-game" element={<VitaGame />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </motion.main>
