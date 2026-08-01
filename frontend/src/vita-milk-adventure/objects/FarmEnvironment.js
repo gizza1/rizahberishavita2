@@ -19,11 +19,20 @@ export class FarmEnvironment {
     if (isFarm) {
       level.trees.forEach((x) => scene.add.image(x, groundY, "farm-tree").setOrigin(0.5, 1).setDepth(1));
       cowNpcs = level.cows.map((x, index) => {
-        const cow = scene.add.image(x, groundY, "farm-cow").setOrigin(0.5, 1).setDepth(18);
+        // Keep each cow within its starting solid-ground segment. Spikes do not
+        // affect these bounds, so cows can walk over them but never into a gap.
+        const segment = level.staticPlatforms.find(([center, y, width]) => (
+          y >= 650 && x >= center - width / 2 && x <= center + width / 2
+        ));
+        const [center, , width] = segment || level.staticPlatforms[0];
+        const minX = center - width / 2 + 38;
+        const maxX = center + width / 2 - 38;
+        const startX = Math.min(maxX, Math.max(minX, x));
+        const cow = scene.add.image(startX, groundY, "farm-cow").setOrigin(0.5, 1).setDepth(18);
         scene.physics.add.existing(cow);
         cow.body.setSize(66, 38).setOffset(4, 8).setAllowGravity(false).setImmovable(true);
         cow.body.setVelocityX(index % 2 === 0 ? 46 : -46);
-        return { cow, originX: x, range: 85, direction: index % 2 === 0 ? 1 : -1 };
+        return { cow, minX, maxX, direction: index % 2 === 0 ? 1 : -1 };
       });
     } else {
       for (let x = 250; x < level.worldWidth; x += 520) {
@@ -48,8 +57,8 @@ export class FarmEnvironment {
 
   static updateCows(cows = []) {
     cows.forEach((npc) => {
-      if (npc.cow.x >= npc.originX + npc.range) npc.direction = -1;
-      if (npc.cow.x <= npc.originX - npc.range) npc.direction = 1;
+      if (npc.cow.x >= npc.maxX) npc.direction = -1;
+      if (npc.cow.x <= npc.minX) npc.direction = 1;
       npc.cow.body.setVelocityX(npc.direction * 46);
       npc.cow.setFlipX(npc.direction < 0);
     });
