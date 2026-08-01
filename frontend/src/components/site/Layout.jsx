@@ -107,7 +107,7 @@ export const Layout = () => {
 
       {!isGameRoute && <FloatingParticles count={12} />}
 
-      {!isGameRoute && <Navbar />}
+      <Navbar />
       <AnimatedRoutes />
       {!isGameRoute && <Footer />}
 

@@ -27,7 +27,7 @@ export default function VitaGame() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[1000] h-screen w-screen bg-[#0a1a2a]">
+    <div className="fixed inset-0 z-[800] h-screen w-screen bg-[#0a1a2a]">
       <div
         id="vita-game-container"
         ref={containerRef}
@@ -36,7 +36,7 @@ export default function VitaGame() {
       <button
         type="button"
         onClick={enterFullscreen}
-        className="absolute right-4 top-4 z-[1002] rounded-full border border-white/30 bg-[#0a3f83]/80 px-4 py-2 text-xs font-bold text-white backdrop-blur transition hover:bg-[#0a3f83]"
+        className="absolute right-4 top-24 z-[1002] rounded-full border border-white/30 bg-[#0a3f83]/80 px-4 py-2 text-xs font-bold text-white backdrop-blur transition hover:bg-[#0a3f83]"
       >
         Full screen
       </button>
