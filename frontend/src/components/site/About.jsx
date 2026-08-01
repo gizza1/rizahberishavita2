@@ -47,7 +47,7 @@ export const About = () => {
                     key={t.year}
                     onClick={() => setActive(i)}
                     data-testid={`timeline-${i}`}
-                    className="block w-full text-left"
+                    className="group block w-full text-left"
                   >
                     <div className="flex items-start gap-5 border-l-2 pl-5 transition-colors duration-300"
                       style={{ borderColor: open ? "#007BFF" : "rgba(10,31,68,0.1)" }}
@@ -56,16 +56,16 @@ export const About = () => {
                         {t.year}
                       </span>
                       <div className="flex-1 pb-4">
-                        <h3 className={`font-display text-lg font-bold transition-colors duration-300 ${open ? "text-vita-ink" : "text-vita-ink/50"}`}>
+                        <h3 className={`font-display text-lg font-bold transition-all duration-300 group-hover:drop-shadow-[0_4px_8px_rgba(0,123,255,0.3)] ${open ? "text-vita-ink" : "text-vita-ink/50"}`}>
                           {t.title}
                         </h3>
                         <motion.div
                           initial={false}
-                          animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+                          animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0, y: open ? 0 : -8 }}
                           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                           className="overflow-hidden"
                         >
-                          <p className="pt-1 text-sm text-vita-muted">{t.text}</p>
+                          <p className="pt-2 text-sm leading-relaxed text-vita-muted transition-all duration-300 group-hover:drop-shadow-[0_4px_8px_rgba(0,123,255,0.25)]">{t.text}</p>
                         </motion.div>
                       </div>
                     </div>

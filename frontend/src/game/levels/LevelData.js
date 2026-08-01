@@ -32,6 +32,7 @@ const BASE_LEVELS = [
     obstacles: [
       // Farm — simple spikes and hay bales
       { type: "spike", x: 500, y: 595 },
+      { type: "spike", x: 1800, y: 575 },
       { type: "spike", x: 2500, y: 595 },
       { type: "milk_spill", x: 3200, y: 612, w: 120, h: 10 },
     ],
@@ -199,6 +200,7 @@ const BASE_LEVELS = [
       { type: "hay", x: 3300, y: 595 },
       { type: "cheese", x: 4100, y: 250, vx: 130, vy: -220 },
       { type: "spike", x: 5200, y: 595 },
+      { type: "spike", x: 5600, y: 595 },
     ],
     coins: [
       [500, 400], [530, 390], [560, 380], [590, 370], // slope trail

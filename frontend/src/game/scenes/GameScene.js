@@ -52,7 +52,14 @@ export class GameScene extends Phaser.Scene {
     // --- Ground segments ---
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
     this.groundGroup = this.physics.add.staticGroup();
-    level.groundSegments.forEach(([sx, ex, gy]) => {
+    // Extend each segment to the next one so terrain transitions remain solid.
+    // Levels may still vary in height, but there are no gaps the player can fall through.
+    const groundSegments = level.groundSegments.map(([sx, ex, gy], index, segments) => [
+      sx,
+      index < segments.length - 1 ? segments[index + 1][0] : ex,
+      gy,
+    ]);
+    groundSegments.forEach(([sx, ex, gy]) => {
       const w = ex - sx;
       // Use tiled image for ground
       for (let gx = sx; gx < ex; gx += 64) {
@@ -100,7 +107,7 @@ export class GameScene extends Phaser.Scene {
     this.vfx.spawnBirds(level.birds ?? 5);
     this.vfx.spawnDust(18);
     this.vfx.spawnLightRays(4);
-    this.vfx.createGrassTiles(level.groundSegments, this.groundGroup);
+    this.vfx.createGrassTiles(groundSegments, this.groundGroup);
     if (level.weather) this.vfx.spawnWeather(level.weather, level.weatherIntensity ?? 1);
 
     // --- Milk Pickups ---

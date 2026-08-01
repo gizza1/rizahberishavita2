@@ -54,10 +54,10 @@ export const RECIPES = [
 export const RECIPE_FILTERS = ["All", "Breakfast", "Desserts", "Lunch", "Dinner"];
 
 export const TIMELINE = [
-  { year: "2003", title: "The First Churn", text: "VITA is founded in Kosovo with a single truck and an uncompromising promise: honestly fresh dairy." },
-  { year: "2010", title: "Growth", text: "A new modern facility opens, partnering with hundreds of local family farms across the region." },
-  { year: "2018", title: "Innovation", text: "We launch protein, lactose-free and probiotic lines — bringing fresh thinking to every fridge." },
-  { year: "Today", title: "Kosovo's Leading Dairy", text: "280+ people, thousands of farmers, and one belief: from our farms to your family." },
+  { year: "2003", title: "The First Churn", text: "In 2003, Qumështorja Vita began producing and processing milk in Kosovo as part of Devolli Group. Using modern UHT technology and Tetra Pak packaging, Vita became the first dairy in Kosovo to offer long-lasting, high-quality milk. This marked the beginning of one of the country's most recognized dairy brands." },
+  { year: "2010", title: "Growth", text: "By 2010, Qumështorja Vita had become one of Kosovo's leading dairy producers. The company expanded its range of milk and dairy products, strengthened its distribution network across the country, and continued investing in modern production technology to provide high-quality products to consumers." },
+  { year: "2018", title: "Innovation", text: "In 2018, Qumështorja Vita celebrated its 15th anniversary. During this period, the company expanded and promoted its dairy product range, including Bene Vita Calcium and Vitamin milk, chocolate milk, yogurt, ayran, schmand, clabber, and UHT milk. Vita continued to strengthen its position as one of Kosovo's leading dairy producers." },
+  { year: "2026", title: "Kosovo's Leading Dairy", text: "In 2026, Qumështorja Vita remained one of Kosovo's leading dairy companies, continuing to produce a wide range of fresh milk, yogurt, cheese, butter, sour cream, ayran, and flavored dairy products. During the year, independent laboratory analyses confirmed that Vita's milk products contained no milk powder or palm oil, reinforcing the company's commitment to quality and consumer trust." },
 ];
 
 export const STATS = [
