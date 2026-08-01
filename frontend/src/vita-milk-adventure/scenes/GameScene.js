@@ -23,8 +23,9 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.level.worldWidth, this.level.worldHeight);
     this.state = { collected: 0, required: this.level.requiredMilk, total: this.level.bottles.length, score: 0, lives: 3, complete: false };
     this.paused = false;
-    FarmEnvironment.create(this, this.level);
+    this.farmCows = FarmEnvironment.create(this, this.level);
     this.player = new Player(this, this.level.spawn.x, this.level.spawn.y, this.characterKey);
+    this.farmCows.forEach(({ cow }) => this.physics.add.collider(this.player, cow));
     this.platforms = new PlatformSystem(this, this.player);
     this.level.staticPlatforms.forEach(([x, y, width]) => this.platforms.addStatic(x, y + this.platformOffsetY, width));
     this.level.floatingPlatforms.forEach(([x, y, width]) => this.platforms.addFloating(x, y + this.platformOffsetY, width));
@@ -34,7 +35,8 @@ export class GameScene extends Phaser.Scene {
     (this.level.disappearingPlatforms || []).forEach(([x, y, width]) => this.platforms.addDisappearing(x, y + this.platformOffsetY, width));
     (this.level.conveyors || []).forEach(([x, y, width, direction]) => this.platforms.addConveyor(x, y + this.platformOffsetY, width, direction));
     this.obstacles = new ObstacleSystem(this, this.player, () => this._loseLife());
-    this.level.spikes.forEach(([x, y]) => this.obstacles.addSpike(x, y + this.platformOffsetY));
+    const spikeScale = this.level.theme === "farm" ? 1 : 1.1;
+    this.level.spikes.forEach(([x, y]) => this.obstacles.addSpike(x, y + this.platformOffsetY, spikeScale));
     this.collectibles = new CollectibleSystem(this, this.player, ({ scoreValue }) => this._collectMilk(scoreValue));
     this.level.bottles.forEach(([x, y], index) => {
       this.collectibles.addMilkBottle(x, y, 100, this.level.hiddenBottleIndexes?.includes(index));
@@ -65,6 +67,7 @@ export class GameScene extends Phaser.Scene {
   update(time, delta) {
     if (this.state.complete || this.paused) return;
     this.player.update(time, delta);
+    FarmEnvironment.updateCows(this.farmCows);
     this.platforms.update(time);
     this.collectibles.update(this.player);
     if (this.player.y > this.level.worldHeight + 80) this._loseLife();

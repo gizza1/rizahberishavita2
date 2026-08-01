@@ -2,6 +2,17 @@
   display: block;
   max-width: 100%;
   touch-action: none;
+  cursor: default !important;
+}
+
+.vita-milk-adventure,
+.vita-milk-adventure * {
+  cursor: default !important;
+}
+
+.vita-milk-adventure:fullscreen,
+.vita-milk-adventure:fullscreen canvas {
+  cursor: default !important;
 }
 
 @media (max-width: 640px) {

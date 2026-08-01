@@ -15,9 +15,16 @@ export class FarmEnvironment {
     sky.fillStyle(isFarm ? 0x70a75f : 0x3e4d5c, 0.75);
     for (let x = 0; x < level.worldWidth; x += 440) sky.fillCircle(x + 210, 680, 180);
     sky.setDepth(-10);
+    let cowNpcs = [];
     if (isFarm) {
       level.trees.forEach((x) => scene.add.image(x, groundY, "farm-tree").setOrigin(0.5, 1).setDepth(1));
-      level.cows.forEach((x) => scene.add.image(x, groundY, "farm-cow").setOrigin(0.5, 1).setDepth(2));
+      cowNpcs = level.cows.map((x, index) => {
+        const cow = scene.add.image(x, groundY, "farm-cow").setOrigin(0.5, 1).setDepth(18);
+        scene.physics.add.existing(cow);
+        cow.body.setSize(66, 38).setOffset(4, 8).setAllowGravity(false).setImmovable(true);
+        cow.body.setVelocityX(index % 2 === 0 ? 46 : -46);
+        return { cow, originX: x, range: 85, direction: index % 2 === 0 ? 1 : -1 };
+      });
     } else {
       for (let x = 250; x < level.worldWidth; x += 520) {
         const tank = scene.add.container(x, groundY - 81).setDepth(2);
@@ -36,5 +43,15 @@ export class FarmEnvironment {
     for (let x = 90; x < level.worldWidth; x += 110) {
       scene.add.rectangle(x, groundY - 9, 2, 18, 0x508331, 0.65).setDepth(3);
     }
+    return cowNpcs;
+  }
+
+  static updateCows(cows = []) {
+    cows.forEach((npc) => {
+      if (npc.cow.x >= npc.originX + npc.range) npc.direction = -1;
+      if (npc.cow.x <= npc.originX - npc.range) npc.direction = 1;
+      npc.cow.body.setVelocityX(npc.direction * 46);
+      npc.cow.setFlipX(npc.direction < 0);
+    });
   }
 }
