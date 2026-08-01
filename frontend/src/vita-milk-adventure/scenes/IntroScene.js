@@ -6,10 +6,10 @@ export class IntroScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     this.add.rectangle(width / 2, height / 2, width, height, 0x073b78);
-    const glow = this.add.circle(width / 2, height / 2, 95, 0xffffff, 0.1);
-    const logo = this.add.image(width / 2, height / 2, "vita-logo").setScale(0.15).setAlpha(0);
-    const leftCurtain = this.add.rectangle(width / 4, height / 2, width / 2, height, 0x073b78);
-    const rightCurtain = this.add.rectangle(width * 0.75, height / 2, width / 2, height, 0x073b78);
+    const glow = this.add.circle(width / 2, height / 2, 95, 0xffffff, 0.1).setDepth(1);
+    const leftCurtain = this.add.rectangle(width / 4, height / 2, width / 2, height, 0x073b78).setDepth(1);
+    const rightCurtain = this.add.rectangle(width * 0.75, height / 2, width / 2, height, 0x073b78).setDepth(1);
+    const logo = this.add.image(width / 2, height / 2, "vita-logo").setDepth(2).setScale(0.15).setAlpha(0);
 
     this.tweens.add({ targets: [logo, glow], alpha: { from: 0, to: 1 }, duration: 450, ease: "Sine.easeOut" });
     this.tweens.add({ targets: logo, scale: 0.5, duration: 900, ease: "Back.easeOut" });
